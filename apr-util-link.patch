@@ -1,5 +1,5 @@
---- apr-util/configure.in.orig	2003-08-29 00:17:18.000000000 +0200
-+++ apr-util/configure.in	2003-10-05 22:59:22.686006816 +0200
+--- apr-util-0.9.4/configure.in.orig	2004-04-18 23:20:56.000000000 +0200
++++ apr-util-0.9.4/configure.in	2004-04-18 23:25:35.447213680 +0200
 @@ -98,7 +98,12 @@
  APU_FIND_EXPAT
  APU_FIND_ICONV
@@ -13,12 +13,12 @@
  AC_MSG_CHECKING(if system crypt() function is threadsafe)
  if test "x$apu_crypt_threadsafe" = "x1"; then
    AC_DEFINE(APU_CRYPT_THREADSAFE, 1, [Define if the system crypt() function is threadsafe])
-@@ -134,7 +139,7 @@
-     aprlib=`$apr_config --link-libtool`
-     EXTRA_OS_LINK="$aprlib $top_builddir/xml/expat/lib/libexpat.la"
-     ;;
--*AIX*|*Darwin*)
-+*AIX*|*Darwin*|*Linux*)
+@@ -130,7 +135,7 @@
+     dnl ### apr and expat libraries to the build or it'll die a truly horrible
+     dnl ### death. We now use the apr-config tool to determine the correct
+     dnl ### library to link against :)
+-*AIX*|*Darwin*|*BeOS*)
++*AIX*|*Darwin*|*BeOS*|*Linux*)
      dnl need such stuff as -liconv to be specified when building libaprutil.la
      EXTRA_OS_LINK='$(APRUTIL_LDFLAGS) $(APRUTIL_LIBS)'
      ;;
