@@ -1,3 +1,4 @@
+%bcond_without	ldap
 %define snap	20030913101715
 Summary:	A companion library to Apache Portable Runtime
 Name:		apr-util
@@ -11,7 +12,7 @@ Source0:	http://cvs.apache.org/snapshots/apr-util/%{name}_%{snap}.tar.gz
 # Source0-md5:	00e26d0d77e1265c3bd45d11e9d8457d
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:0.9.4
-BuildRequires:	openldap-devel
+%{?with_ldap:BuildRequires:	openldap-devel}
 BuildRequires:	expat-devel
 BuildRequires:	db-devel
 BuildRequires:	gdbm-devel
@@ -48,8 +49,8 @@ Static apr-util library.
 	--with-apr=%{_datadir}/apr
 %configure \
 	--with-apr=%{_bindir}/apr-config \
-	--with-ldap-include=%{_prefix}/include \
-	--with-ldap-lib=%{_libdir} \
+%{?with_ldap:	--with-ldap-include=%{_prefix}/include} \
+%{?with_ldap:	--with-ldap-lib=%{_libdir}} \
 	--with-iconv=%{_prefix}
 %{__make}
 
