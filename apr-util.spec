@@ -20,7 +20,7 @@ BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_ldap:BuildRequires:	openldap-devel}
-Conflicts:	apr < 1:0.9
+Requires:	apr >= 1:0.9.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -37,8 +37,7 @@ Summary:	Header files and development documentation for apr-util
 Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel
-Conflicts:	apr-devel < 1:0.9
+Requires:	apr-devel >= 1:0.9.4
 
 %description devel
 Header files and development documentation for apr-util.
