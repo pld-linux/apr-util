@@ -5,24 +5,24 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	0.9.5
-Release:	6
+Version:	1.0.0
+Release:	0.1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
-Source0:	http://www.apache.org/dist/apr/%{name}-0.9.4.tar.gz
-# Source0-md5:	909ff60d9efb3f158d33e4569af57874
-Patch0:		%{name}-0.9.4_0.9.5.patch.gz
+Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
+# Source0-md5:	2e39100d4890802822719a4743d8ad7e
+#Patch0:		%{name}-0.9.4_0.9.5.patch.gz
 Patch1:		%{name}-link.patch
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:0.9.4
+BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	autoconf
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_ldap:BuildRequires:	openldap-devel}
-Requires:	apr >= 1:0.9.4
+Requires:	apr >= 1:1.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -65,19 +65,23 @@ Static apr-util library.
 Statyczna biblioteka apr-util.
 
 %prep
-%setup -q -n %{name}-0.9.4
-%patch0 -p1
+%setup -q
+#patch0 -p1
 %patch1 -p1
 
 %build
 ./buildconf \
 	--with-apr=%{_datadir}/apr
+
 %configure \
-	--with-apr=%{_bindir}/apr-config \
-%{?with_ldap:	--with-ldap} \
-%{?with_ldap:	--with-ldap-include=%{_prefix}/include} \
-%{?with_ldap:	--with-ldap-lib=%{_libdir}} \
+	--with-apr=%{_bindir}/apr-1-config \
+%if %{with ldap}
+	--with-ldap \
+	--with-ldap-include=%{_prefix}/include \
+	--with-ldap-lib=%{_libdir} \
+%endif
 	--with-iconv=%{_prefix}
+
 %{__make}
 
 %install
@@ -104,6 +108,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.la
 %{_libdir}/aprutil.exp
 %{_includedir}
+%{_pkgconfigdir}/apr-util-1.pc
 
 %files static
 %defattr(644,root,root,755)
