@@ -5,7 +5,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.5
-Release:	0.2
+Release:	0.3
 Epoch:		1
 License:	Apache
 Group:		Libraries
@@ -69,6 +69,7 @@ Statyczna biblioteka apr-util.
 	--with-apr=%{_datadir}/apr
 %configure \
 	--with-apr=%{_bindir}/apr-config \
+%{?with_ldap:	--with-ldap} \
 %{?with_ldap:	--with-ldap-include=%{_prefix}/include} \
 %{?with_ldap:	--with-ldap-lib=%{_libdir}} \
 	--with-iconv=%{_prefix}
