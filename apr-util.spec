@@ -5,7 +5,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.5
-Release:	2
+Release:	1
 Epoch:		1
 License:	Apache
 Group:		Libraries
@@ -16,7 +16,7 @@ Patch1:		%{name}-0.9.4_0.9.5.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:0.9.4
 BuildRequires:	autoconf
-BuildRequires:	db-devel
+BuildRequires:	db3-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -39,7 +39,7 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apr-devel >= 1:0.9.4
-Requires:	db-devel
+Requires:	db3-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
 %{?with_ldap:Requires:	openldap-devel}
