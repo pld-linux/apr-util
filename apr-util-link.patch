@@ -1,0 +1,24 @@
+--- apr-util/configure.in.orig	2003-08-29 00:17:18.000000000 +0200
++++ apr-util/configure.in	2003-10-05 22:59:22.686006816 +0200
+@@ -98,7 +98,12 @@
+ APU_FIND_EXPAT
+ APU_FIND_ICONV
+ 
++save_LIBS="$LIBS"
++LIBS=
+ AC_SEARCH_LIBS(crypt, crypt ufc)
++APR_ADDTO(APRUTIL_EXPORT_LIBS, [$LIBS])
++APR_ADDTO(APRUTIL_LIBS, [$LIBS])
++LIBS="$save_LIBS $LIBS"
+ AC_MSG_CHECKING(if system crypt() function is threadsafe)
+ if test "x$apu_crypt_threadsafe" = "x1"; then
+   AC_DEFINE(APU_CRYPT_THREADSAFE, 1, [Define if the system crypt() function is threadsafe])
+@@ -134,7 +139,7 @@
+     aprlib=`$apr_config --link-libtool`
+     EXTRA_OS_LINK="$aprlib $top_builddir/xml/expat/lib/libexpat.la"
+     ;;
+-*AIX*|*Darwin*)
++*AIX*|*Darwin*|*Linux*)
+     dnl need such stuff as -liconv to be specified when building libaprutil.la
+     EXTRA_OS_LINK='$(APRUTIL_LDFLAGS) $(APRUTIL_LIBS)'
+     ;;

@@ -1,6 +1,10 @@
-%bcond_without	ldap
+#
+# Conditional build:
+%bcond_without	ldap	# without LDAP support
+#
 %define snap	20030913101715
 Summary:	A companion library to Apache Portable Runtime
+Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.4
 Release:	0.%{snap}.2
@@ -10,14 +14,15 @@ Group:		Libraries
 # http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
 Source0:	http://cvs.apache.org/snapshots/apr-util/%{name}_%{snap}.tar.gz
 # Source0-md5:	00e26d0d77e1265c3bd45d11e9d8457d
+Patch0:		%{name}-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:0.9.4
-%{?with_ldap:BuildRequires:	openldap-devel}
-BuildRequires:	expat-devel
+BuildRequires:	autoconf
 BuildRequires:	db-devel
+BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
-BuildRequires:	autoconf
+%{?with_ldap:BuildRequires:	openldap-devel}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -25,24 +30,38 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 A companion library to Apache Portable Runtime.
 
+%description -l pl
+Biblioteka towarzysz±ca dla biblioteki Apache Portable Runtime
+(przeno¶nej biblioteki uruchomieniowej).
+
 %package devel
-Summary:	Header files and develpment documentation for apr-util
+Summary:	Header files and development documentation for apr-util
+Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
-Requires:	%{name} = %{epoch}:%{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	apr-devel
 
 %description devel
-Header files and develpment documentation for apr-util.
+Header files and development documentation for apr-util.
+
+%description devel -l pl
+Pliki nag³ówkowe i dokumentacja programisty do apr-util.
 
 %package static
 Summary:	Static apr-util library
+Summary(pl):	Statyczna biblioteka apr-util
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{epoch}:%{version}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static apr-util library.
 
+%description static -l pl
+Statyczna biblioteka apr-util.
+
 %prep
-%setup  -q -n %{name}
+%setup -q -n %{name}
+%patch -p1
 
 %build
 ./buildconf \
@@ -60,11 +79,11 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%post   -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
