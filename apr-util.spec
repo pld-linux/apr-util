@@ -1,18 +1,23 @@
+%define snap	20030913101715
 Summary:	A companion library to Apache Portable Runtime
 Name:		apr-util
-Version:	0.9.3
-Release:	1
+Version:	0.9.4
+Release:	0.%{snap}.1
 Epoch:		1
 License:	Apache
 Group:		Libraries
-Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
-# Source0-md5:	5dbe535cf7c07677e41ef2bf4759fecf
+# http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
+Source0:	http://cvs.apache.org/snapshots/apr-util/%{name}_%{snap}.tar.gz
+# Source0-md5:	00e26d0d77e1265c3bd45d11e9d8457d
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:0.9.3
+BuildRequires:	apr-devel >= 1:0.9.4
 BuildRequires:	openldap-devel
 BuildRequires:	expat-devel
 BuildRequires:	db-devel
 BuildRequires:	gdbm-devel
+BuildRequires:	libtool
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -37,9 +42,10 @@ Requires:	%{name}-devel = %{epoch}:%{version}
 Static apr-util library.
 
 %prep
-%setup  -q
+%setup  -q -n %{name}
 
 %build
+./buildconf
 %configure \
 	--with-apr=%{_bindir}/apr-config \
 	--with-ldap-include=%{_includedir} \
