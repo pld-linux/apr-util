@@ -13,7 +13,7 @@ URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:0.9.4
 BuildRequires:	openldap-devel
 BuildRequires:	expat-devel
-BuildRequires:	db-devel
+BuildRequires:	db3-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 BuildRequires:	autoconf
