@@ -5,14 +5,14 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.5
-Release:	4
+Release:	4.1
 Epoch:		1
 License:	Apache
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-0.9.4.tar.gz
 # Source0-md5:	909ff60d9efb3f158d33e4569af57874
-Patch0:		%{name}-link.patch
-Patch1:		%{name}-0.9.4_0.9.5.patch
+Patch0:		%{name}-0.9.4_0.9.5.patch.gz
+Patch1:		%{name}-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:0.9.4
 BuildRequires:	autoconf
@@ -66,7 +66,7 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q -n %{name}-0.9.4
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
 %build
 ./buildconf \
@@ -93,7 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES STATUS
+%doc CHANGES
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 
 %files devel
