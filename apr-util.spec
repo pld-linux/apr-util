@@ -42,8 +42,9 @@ Static apr-util library.
 %build
 %configure \
 	--with-apr=%{_bindir}/apr-config \
-	--with-ldap \
-	--with-iconv
+	--with-ldap-include=%{_includedir} \
+	--with-ldap-lib=%{_libdir} \
+	--with-iconv=%{_prefix}
 %{__make}
 
 %install
