@@ -2,7 +2,7 @@
 Summary:	A companion library to Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.4
-Release:	0.%{snap}.1
+Release:	0.%{snap}.2
 Epoch:		1
 License:	Apache
 Group:		Libraries
@@ -17,7 +17,6 @@ BuildRequires:	db-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -45,10 +44,11 @@ Static apr-util library.
 %setup  -q -n %{name}
 
 %build
-./buildconf
+./buildconf \
+	--with-apr=%{_datadir}/apr
 %configure \
 	--with-apr=%{_bindir}/apr-config \
-	--with-ldap-include=%{_includedir} \
+	--with-ldap-include=%{_prefix}/include \
 	--with-ldap-lib=%{_libdir} \
 	--with-iconv=%{_prefix}
 %{__make}
