@@ -12,8 +12,7 @@ License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
 # Source0-md5:	2e39100d4890802822719a4743d8ad7e
-#Patch0:		%{name}-0.9.4_0.9.5.patch.gz
-Patch1:		%{name}-link.patch
+Patch0:		%{name}-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.0.0
 BuildRequires:	autoconf
@@ -39,7 +38,7 @@ Summary:	Header files and development documentation for apr-util
 Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel >= 1:0.9.4
+Requires:	apr-devel >= 1:1.0.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
@@ -56,7 +55,7 @@ Summary:	Static apr-util library
 Summary(pl):	Statyczna biblioteka apr-util
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
-Conflicts:	apr-static < 1:0.9
+Conflicts:	apr-static < 1:1.0.0
 
 %description static
 Static apr-util library.
@@ -66,8 +65,7 @@ Statyczna biblioteka apr-util.
 
 %prep
 %setup -q
-#patch0 -p1
-%patch1 -p1
+%patch0 -p1
 
 %build
 ./buildconf \
