@@ -1,19 +1,16 @@
-#
-# Conditional build:
+
 %bcond_without	ldap	# without LDAP support
-#
-%define snap	20030913101715
+
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.4
-Release:	0.%{snap}.2
+Release:	1
 Epoch:		1
 License:	Apache
 Group:		Libraries
-# http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
-Source0:	http://cvs.apache.org/snapshots/apr-util/%{name}_%{snap}.tar.gz
-# Source0-md5:	00e26d0d77e1265c3bd45d11e9d8457d
+Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
+# Source0-md5:	909ff60d9efb3f158d33e4569af57874
 Patch0:		%{name}-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:0.9.4
@@ -60,7 +57,7 @@ Static apr-util library.
 Statyczna biblioteka apr-util.
 
 %prep
-%setup -q -n %{name}
+%setup -q
 %patch -p1
 
 %build
