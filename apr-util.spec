@@ -1,13 +1,14 @@
-
+#
+# Conditional build:
 %bcond_without	ldap	# without LDAP support
-
+#
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	0.9.5
-Release:	4.1
+Release:	5
 Epoch:		1
-License:	Apache
+License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-0.9.4.tar.gz
 # Source0-md5:	909ff60d9efb3f158d33e4569af57874
@@ -66,7 +67,7 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q -n %{name}-0.9.4
 %patch0 -p1
-#%patch1 -p1
+%patch1 -p1
 
 %build
 ./buildconf \
