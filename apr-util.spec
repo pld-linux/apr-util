@@ -39,6 +39,8 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apr-devel >= 1:0.9.4
+Requires:	db-devel
+Requires:	expat-devel
 Requires:	gdbm-devel
 %{?with_ldap:Requires:	openldap-devel}
 
