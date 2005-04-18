@@ -5,23 +5,23 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	1.0.1
+Version:	1.1.2
 Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
-# Source0-md5:	36300ad71a6e7d15624ae83d51833b37
+# Source0-md5:	e82f933c065ccd1c7d910da67bc77825
 Patch0:		%{name}-link.patch
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:1.0.0
+BuildRequires:	apr-devel >= 1:1.1.0
 BuildRequires:	autoconf
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_ldap:BuildRequires:	openldap-devel}
-Requires:	apr >= 1:1.0.0
+Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -38,7 +38,7 @@ Summary:	Header files and development documentation for apr-util
 Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel >= 1:1.0.0
+Requires:	apr-devel >= 1:1.1.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
@@ -55,7 +55,6 @@ Summary:	Static apr-util library
 Summary(pl):	Statyczna biblioteka apr-util
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
-Conflicts:	apr-static < 1:1.0.0
 
 %description static
 Static apr-util library.
@@ -66,6 +65,9 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q
 %patch0 -p1
+
+# not needed, gen-build.py is not packaged in apr
+%{__perl} -pi -e 's/^(.*gen-build\.py)/#$1/' buildconf
 
 %build
 ./buildconf \
