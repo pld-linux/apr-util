@@ -13,12 +13,3 @@
  AC_MSG_CHECKING(if system crypt() function is threadsafe)
  if test "x$apu_crypt_threadsafe" = "x1"; then
    AC_DEFINE(APU_CRYPT_THREADSAFE, 1, [Define if the system crypt() function is threadsafe])
-@@ -130,7 +135,7 @@
-     dnl ### apr and expat libraries to the build or it'll die a truly horrible
-     dnl ### death. We now use the apr-config tool to determine the correct
-     dnl ### library to link against :)
--*AIX*|*Darwin*|*BeOS*)
-+*AIX*|*Darwin*|*BeOS*|*Linux*)
-     dnl need such stuff as -liconv to be specified when building libaprutil.la
-     EXTRA_OS_LINK='$(APRUTIL_LDFLAGS) $(APRUTIL_LIBS)'
-     ;;
