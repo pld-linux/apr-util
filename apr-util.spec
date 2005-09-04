@@ -1,17 +1,19 @@
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
+%bcond_without	sqlite	# without SQLite support
+%bcond_without	sqlite3	# without SQLite3 support
 #
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	1.1.2
+Version:	1.2.1
 Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
-Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.gz
-# Source0-md5:	e82f933c065ccd1c7d910da67bc77825
+Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
+# Source0-md5:	1e579571bf42a2bb0e5ba882721efa46
 Patch0:		%{name}-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
@@ -21,6 +23,8 @@ BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_sqlite:BuildRequires:	sqlite-devel >= 2}
+%{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
 Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -43,6 +47,8 @@ Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
 %{?with_ldap:Requires:	openldap-devel}
+%{?with_sqlite:Requires:	sqlite-devel >= 2}
+%{?with_sqlite3:Requires:	sqlite3-devel >= 3}
 
 %description devel
 Header files and development documentation for apr-util.
