@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
-%bcond_without	sqlite	# without SQLite support
+%bcond_with	sqlite	# with SQLite 2.x support
 %bcond_without	sqlite3	# without SQLite3 support
 #
 Summary:	A companion library to Apache Portable Runtime
@@ -86,7 +86,9 @@ Statyczna biblioteka apr-util.
 	--with-ldap-include=%{_prefix}/include \
 	--with-ldap-lib=%{_libdir} \
 %endif
-	--with-iconv=%{_prefix}
+	--with-iconv=%{_prefix} \
+	%{!?with_sqlite:--without-sqlite2} \
+	%{!?with_sqlite3:--without-sqlite3}
 
 %{__make}
 
