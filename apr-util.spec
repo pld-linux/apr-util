@@ -1,6 +1,8 @@
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
+%bcond_with	mysql	# with MySQL support
+%bcond_without	pgsql	# without PostgreSQL support
 %bcond_with	sqlite	# with SQLite 2.x support
 %bcond_without	sqlite3	# without SQLite3 support
 #
@@ -22,7 +24,9 @@ BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
+%{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_pgsql:BuildRequires:	postgresql-devel}
 %{?with_sqlite:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
 Requires:	apr >= 1:1.1.0
@@ -46,7 +50,9 @@ Requires:	apr-devel >= 1:1.1.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
+%{?with_mysql:Requires:	mysql-devel}
 %{?with_ldap:Requires:	openldap-devel}
+%{?with_pgsql:Requires:	postgresql-devel}
 %{?with_sqlite:Requires:	sqlite-devel >= 2}
 %{?with_sqlite3:Requires:	sqlite3-devel >= 3}
 
@@ -87,6 +93,8 @@ Statyczna biblioteka apr-util.
 	--with-ldap-lib=%{_libdir} \
 %endif
 	--with-iconv=%{_prefix} \
+	%{?with_mysql:--with-mysql} \
+	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite:--without-sqlite2} \
 	%{!?with_sqlite3:--without-sqlite3}
 
