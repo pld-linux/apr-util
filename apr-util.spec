@@ -9,13 +9,13 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.1
-Release:	2
+Version:	1.2.2
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	1e579571bf42a2bb0e5ba882721efa46
+# Source0-md5:	694228b227e30cb9da3823514516e91c
 Patch0:		%{name}-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
