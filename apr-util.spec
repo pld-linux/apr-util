@@ -1,7 +1,11 @@
+# TODO
+# - play with DSO dbd's
+# - licensing issues with mysql. can we (PLD Linux) package it inside
+#   apr-util? see INSTALL.MySQL for more details
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
-%bcond_with	mysql	# with MySQL support (not fully implemented)
+%bcond_with	mysql	# with MySQL support
 %bcond_without	pgsql	# without PostgreSQL support
 %bcond_with	sqlite	# with SQLite 2.x support
 %bcond_without	sqlite3	# without SQLite3 support
@@ -10,13 +14,16 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	1
+Release:	1.10
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 # Source0-md5:	694228b227e30cb9da3823514516e91c
+Source1:	http://apache.webthing.com/database/apr_dbd_mysql.c
+# Source1-md5:	59d26a91cb7f1492fea9ab3e6cd054fc
 Patch0:		%{name}-link.patch
+Patch1:		%{name}-mysql.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 BuildRequires:	autoconf
@@ -29,6 +36,7 @@ BuildRequires:	libtool
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 %{?with_sqlite:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
+%{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
 Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -77,9 +85,14 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q
 %patch0 -p1
-
-# not needed, gen-build.py is not packaged in apr
+%patch1 -p1
+%if %{with mysql}
+cp %{SOURCE1} dbd/apr_dbd_mysql.c
+%else
+# not needed, gen-build.py is not packaged in apr-util
+# (and it shouldn't apr-devel should have it -glen)
 %{__perl} -pi -e 's/^(.*gen-build\.py)/#$1/' buildconf
+%endif
 
 %build
 ./buildconf \
@@ -93,7 +106,7 @@ Statyczna biblioteka apr-util.
 	--with-ldap-lib=%{_libdir} \
 %endif
 	--with-iconv=%{_prefix} \
-	%{?with_mysql:--with-mysql} \
+	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite:--without-sqlite2} \
 	%{!?with_sqlite3:--without-sqlite3}
@@ -115,6 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGES
+%{?with_mysql:%doc INSTALL.MySQL}
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 
 %files devel
