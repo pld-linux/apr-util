@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
-%bcond_with	mysql	# with MySQL support
+%bcond_with	mysql	# with MySQL support (not fully implemented)
 %bcond_without	pgsql	# without PostgreSQL support
 %bcond_with	sqlite	# with SQLite 2.x support
 %bcond_without	sqlite3	# without SQLite3 support
