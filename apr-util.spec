@@ -20,8 +20,9 @@ License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 # Source0-md5:	694228b227e30cb9da3823514516e91c
-Source1:	http://apache.webthing.com/database/apr_dbd_mysql.c
-# Source1-md5:	59d26a91cb7f1492fea9ab3e6cd054fc
+# http://apache.webthing.com/database/apr_dbd_mysql.c, our is modified
+Source1:	apr_dbd_mysql.c
+# Source1-md5:	cf99813d81c128be5a8bb0b4726fef42
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-mysql.patch
 URL:		http://apr.apache.org/
