@@ -563,7 +563,7 @@ static apr_dbd_t *dbd_mysql_open(apr_pool_t *pool, const char *params)
                                    fields[1].value, fields[2].value,
                                    fields[3].value, port,
                                    fields[5].value, 0);
-    return sql;
+    return sql->conn ? sql : NULL;
 }
 static apr_status_t dbd_mysql_close(apr_dbd_t *handle)
 {
