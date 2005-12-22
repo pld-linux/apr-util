@@ -24,6 +24,7 @@ Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-mysql.patch
+Patch2:		%{name}-db4.4.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 BuildRequires:	autoconf
@@ -86,6 +87,7 @@ Statyczna biblioteka apr-util.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 %if %{with mysql}
 cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %else
