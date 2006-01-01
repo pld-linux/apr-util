@@ -1,0 +1,11 @@
+--- apr-util-1.2.2/dbd/apr_dbd.c~	2005-08-11 17:06:26.000000000 +0300
++++ apr-util-1.2.2/dbd/apr_dbd.c	2006-01-01 14:44:23.000000000 +0200
+@@ -32,6 +32,8 @@
+  * #define APR_DSO_BUILD APR_HAS_DSO
+  */
+ 
++#define APR_DSO_BUILD APR_HAS_DSO
++
+ #if APR_DSO_BUILD
+ #if APR_HAS_THREADS
+ static apr_thread_mutex_t* mutex = NULL;
