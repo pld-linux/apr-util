@@ -9,12 +9,13 @@
 %bcond_without	pgsql	# without PostgreSQL support
 %bcond_with	sqlite	# with SQLite 2.x support
 %bcond_without	sqlite3	# without SQLite3 support
+%bcond_with	dso	# experimental dso linking
 #
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	1.10
+Release:	1.18
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -25,8 +26,10 @@ Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-mysql.patch
 Patch2:		%{name}-db4.4.patch
+Patch3:		%{name}-dso.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
+%{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
 BuildRequires:	autoconf
 BuildRequires:	db-devel
 BuildRequires:	expat-devel
@@ -35,9 +38,9 @@ BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
+BuildRequires:	sed >= 4.0
 %{?with_sqlite:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
-%{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
 Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -92,9 +95,12 @@ Statyczna biblioteka apr-util.
 cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %else
 # not needed, gen-build.py is not packaged in apr-util
-# (and it shouldn't apr-devel should have it -glen)
-%{__perl} -pi -e 's/^(.*gen-build\.py)/#$1/' buildconf
+# (and it shouldn't: apr-devel should have it -glen)
+%{__sed} -i -e 's/^\(.*gen-build\.py\)/#\1/' buildconf
 %endif
+%{?with_dso:%patch3 -p1}
+
+rm -rf xml/expat
 
 %build
 ./buildconf \
@@ -113,13 +119,53 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 	%{!?with_sqlite:--without-sqlite2} \
 	%{!?with_sqlite3:--without-sqlite3}
 
-%{__make}
+%{__make} \
+	CC="%{__cc}"
+
+%if %{with dso}
+%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile
+%{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_.*\.lo,,g' build-outputs.mk
+rm -f libaprutil-1.la
+%{__make} libaprutil-1.la
+
+%if %{with mysql}
+libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_mysql.lo -lmysqlclient_r -o dbd/libapr_dbd_mysql.la
+%endif
+%if %{with pgsql}
+libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_pgsql.lo -lpq  -o dbd/libapr_dbd_pgsql.la
+%endif
+%if %{with sqlite3}
+libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite3.lo -lsqlite3 -o dbd/libapr_dbd_sqlite3.la
+%endif
+%if %{with sqlite}
+libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite2.lo -o dbd/libapr_dbd_sqlite2.la
+%endif
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+ 
+%if %{with dso}
+%if %{with mysql}
+libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_mysql.la $RPM_BUILD_ROOT%{_libdir}
+mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_mysql.so
+%endif
+%if %{with pgsql}
+libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_pgsql.la $RPM_BUILD_ROOT%{_libdir}
+mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_pgsql.so
+%endif
+%if %{with sqlite3}
+libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite3.la $RPM_BUILD_ROOT%{_libdir}
+mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite3.so
+%endif
+%if %{with sqlite}
+libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite2.la $RPM_BUILD_ROOT%{_libdir}
+mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
+%endif
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -132,11 +178,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc CHANGES
 %{?with_mysql:%doc INSTALL.MySQL}
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
+%{?with_dso:%attr(755,root,root) %{_libdir}/apr_dbd_*.so}
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/lib*.so
+%attr(755,root,root) %{_libdir}/libaprutil*.so
 %{_libdir}/lib*.la
 %{_libdir}/aprutil.exp
 %{_includedir}
