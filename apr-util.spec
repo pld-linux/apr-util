@@ -5,17 +5,17 @@
 #
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
-%bcond_with	mysql	# with MySQL support
+%bcond_without	mysql	# with MySQL support
 %bcond_without	pgsql	# without PostgreSQL support
-%bcond_with	sqlite	# with SQLite 2.x support
+%bcond_with	sqlite2	# with SQLite 2.x support
 %bcond_without	sqlite3	# without SQLite3 support
-%bcond_with	dso	# experimental dso linking
+%bcond_without	dso	# experimental dso linking
 #
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	1.18
+Release:	1.20
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -39,7 +39,7 @@ BuildRequires:	libtool
 %{?with_ldap:BuildRequires:	openldap-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	sed >= 4.0
-%{?with_sqlite:BuildRequires:	sqlite-devel >= 2}
+%{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
 Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -53,6 +53,39 @@ A companion library to Apache Portable Runtime.
 Biblioteka towarzysz±ca dla biblioteki Apache Portable Runtime
 (przeno¶nej biblioteki uruchomieniowej).
 
+%package dbd-mysql
+Summary:	DBD driver for MySQL
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+License:	GPL
+
+%description dbd-mysql
+DBD driver for MySQL.
+
+%package dbd-pgsql
+Summary:	DBD driver for PostgreSQL
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbd-pgsql
+DBD driver for PostgreSQL.
+
+%package dbd-sqlite2
+Summary:	DBD driver for SQLite 2
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbd-sqlite2
+DBD driver for SQLite 2
+
+%package dbd-sqlite3
+Summary:	DBD driver for SQLite 3
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbd-sqlite3
+DBD driver for SQLite 3
+
 %package devel
 Summary:	Header files and development documentation for apr-util
 Summary(pl):	Pliki nag³ówkowe i dokumentacja programisty do apr-util
@@ -65,7 +98,7 @@ Requires:	gdbm-devel
 %{?with_mysql:Requires:	mysql-devel}
 %{?with_ldap:Requires:	openldap-devel}
 %{?with_pgsql:Requires:	postgresql-devel}
-%{?with_sqlite:Requires:	sqlite-devel >= 2}
+%{?with_sqlite2:Requires:	sqlite-devel >= 2}
 %{?with_sqlite3:Requires:	sqlite3-devel >= 3}
 
 %description devel
@@ -116,7 +149,7 @@ rm -rf xml/expat
 	--with-iconv=%{_prefix} \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
-	%{!?with_sqlite:--without-sqlite2} \
+	%{!?with_sqlite2:--without-sqlite2} \
 	%{!?with_sqlite3:--without-sqlite3}
 
 %{__make} \
@@ -134,11 +167,11 @@ libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_db
 %if %{with pgsql}
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_pgsql.lo -lpq  -o dbd/libapr_dbd_pgsql.la
 %endif
+%if %{with sqlite2}
+libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite2.lo -o dbd/libapr_dbd_sqlite2.la
+%endif
 %if %{with sqlite3}
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite3.lo -lsqlite3 -o dbd/libapr_dbd_sqlite3.la
-%endif
-%if %{with sqlite}
-libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite2.lo -o dbd/libapr_dbd_sqlite2.la
 %endif
 %endif
 
@@ -157,13 +190,13 @@ mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_mysql.so
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_pgsql.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_pgsql.so
 %endif
+%if %{with sqlite2}
+libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite2.la $RPM_BUILD_ROOT%{_libdir}
+mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
+%endif
 %if %{with sqlite3}
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite3.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite3.so
-%endif
-%if %{with sqlite}
-libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite2.la $RPM_BUILD_ROOT%{_libdir}
-mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
 %endif
 %endif
 
@@ -176,9 +209,34 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGES
-%{?with_mysql:%doc INSTALL.MySQL}
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
-%{?with_dso:%attr(755,root,root) %{_libdir}/apr_dbd_*.so}
+
+%if %{with dso}
+%if %{with mysql}
+%files dbd-mysql
+%defattr(644,root,root,755)
+%doc INSTALL.MySQL
+%attr(755,root,root) %{_libdir}/apr_dbd_mysql.so
+%endif
+
+%if %{with pgsql}
+%files dbd-pgsql
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr_dbd_pgsql.so
+%endif
+
+%if %{with sqlite2}
+%files dbd-sqlite2
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr_dbd_sqlite2.so
+%endif
+
+%if %{with sqlite3}
+%files dbd-sqlite3
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr_dbd_sqlite3.so
+%endif
+%endif
 
 %files devel
 %defattr(644,root,root,755)
