@@ -10,7 +10,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	1.21
+Release:	1.23
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -148,7 +148,7 @@ rm -rf xml/expat
 
 %if %{with dso}
 # ugly hack until they fix their build system to provide this
-%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile apr-util.pc
+%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile apr-util.pc apu-1-config
 %{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_.*\.lo,,g' build-outputs.mk
 rm -f libaprutil-1.la
 %{__make} libaprutil-1.la
