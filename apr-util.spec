@@ -1,8 +1,3 @@
-# TODO
-# - play with DSO dbd's
-# - licensing issues with mysql. can we (PLD Linux) package it inside
-#   apr-util? see INSTALL.MySQL for more details
-#
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
 %bcond_without	mysql	# with MySQL support
@@ -15,13 +10,13 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	1.20
+Release:	1.21
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 # Source0-md5:	694228b227e30cb9da3823514516e91c
-# http://apache.webthing.com/database/apr_dbd_mysql.c, our is modified
+# http://apache.webthing.com/database/apr_dbd_mysql.c
 Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-mysql.patch
@@ -95,11 +90,7 @@ Requires:	apr-devel >= 1:1.1.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
-%{?with_mysql:Requires:	mysql-devel}
 %{?with_ldap:Requires:	openldap-devel}
-%{?with_pgsql:Requires:	postgresql-devel}
-%{?with_sqlite2:Requires:	sqlite-devel >= 2}
-%{?with_sqlite3:Requires:	sqlite3-devel >= 3}
 
 %description devel
 Header files and development documentation for apr-util.
@@ -156,7 +147,8 @@ rm -rf xml/expat
 	CC="%{__cc}"
 
 %if %{with dso}
-%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile
+# ugly hack until they fix their build system to provide this
+%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile apr-util.pc
 %{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_.*\.lo,,g' build-outputs.mk
 rm -f libaprutil-1.la
 %{__make} libaprutil-1.la
@@ -198,6 +190,7 @@ mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite3.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite3.so
 %endif
+rm -f $RPM_BUILD_ROOT%{_libdir}/libapr_dbd_*.la
 %endif
 
 %clean
