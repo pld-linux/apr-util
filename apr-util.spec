@@ -10,7 +10,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	1.23
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -22,6 +22,7 @@ Patch0:		%{name}-link.patch
 Patch1:		%{name}-mysql.patch
 Patch2:		%{name}-db4.4.patch
 Patch3:		%{name}-dso.patch
+Patch4:		%{name}-dbd.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
@@ -122,7 +123,10 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 # (and it shouldn't: apr-devel should have it -glen)
 %{__sed} -i -e 's/^\(.*gen-build\.py\)/#\1/' buildconf
 %endif
-%{?with_dso:%patch3 -p1}
+%if %{with dso}
+%patch3 -p1
+%patch4 -p1
+%endif
 
 rm -rf xml/expat
 
@@ -147,8 +151,6 @@ rm -rf xml/expat
 	CC="%{__cc}"
 
 %if %{with dso}
-# ugly hack until they fix their build system to provide this
-%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile apr-util.pc apu-1-config
 %{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_.*\.lo,,g' build-outputs.mk
 rm -f libaprutil-1.la
 %{__make} libaprutil-1.la
