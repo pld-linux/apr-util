@@ -1,3 +1,4 @@
+#
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
 %bcond_without	mysql	# with MySQL support
@@ -51,36 +52,52 @@ Biblioteka towarzysz±ca dla biblioteki Apache Portable Runtime
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
+Summary(pl):	Sterownik DBD dla MySQL-a
+License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-License:	GPL
 
 %description dbd-mysql
 DBD driver for MySQL.
 
+%description dbd-mysql -l pl
+Sterownik DBD dla MySQL-a.
+
 %package dbd-pgsql
 Summary:	DBD driver for PostgreSQL
+Summary(pl):	Sterownik DBD dla PostgreSQL-a
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-pgsql
 DBD driver for PostgreSQL.
 
+%description dbd-pgsql -l pl
+Sterownik DBD dla PostgreSQL-a.
+
 %package dbd-sqlite2
 Summary:	DBD driver for SQLite 2
+Summary(pl):	Sterownik DBD dla SQLite 2
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite2
-DBD driver for SQLite 2
+DBD driver for SQLite 2.
+
+%description dbd-sqlite2 -l pl
+Sterownik DBD dla SQLite 2.
 
 %package dbd-sqlite3
 Summary:	DBD driver for SQLite 3
+Summary(pl):	Sterownik DBD dla SQLite 3
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite3
-DBD driver for SQLite 3
+DBD driver for SQLite 3.
+
+%description dbd-sqlite3 -l pl
+Sterownik DBD dla SQLite 3.
 
 %package devel
 Summary:	Header files and development documentation for apr-util
