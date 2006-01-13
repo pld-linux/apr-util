@@ -150,6 +150,9 @@ rm -rf xml/expat
 %build
 ./buildconf \
 	--with-apr=%{_datadir}/apr
+%if %{with dso}
+%{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_[^ ]*\.lo,,g' build-outputs.mk
+%endif
 
 %configure \
 	--with-apr=%{_bindir}/apr-1-config \
@@ -168,20 +171,20 @@ rm -rf xml/expat
 	CC="%{__cc}"
 
 %if %{with dso}
-%{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_.*\.lo,,g' build-outputs.mk
-rm -f libaprutil-1.la
-%{__make} libaprutil-1.la
-
 %if %{with mysql}
+%{__make} dbd/apr_dbd_mysql.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_mysql.lo -lmysqlclient_r -o dbd/libapr_dbd_mysql.la
 %endif
 %if %{with pgsql}
+%{__make} dbd/apr_dbd_pgsql.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_pgsql.lo -lpq  -o dbd/libapr_dbd_pgsql.la
 %endif
 %if %{with sqlite2}
+%{__make} dbd/apr_dbd_sqlite2.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite2.lo -o dbd/libapr_dbd_sqlite2.la
 %endif
 %if %{with sqlite3}
+%{__make} dbd/apr_dbd_sqlite3.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite3.lo -lsqlite3 -o dbd/libapr_dbd_sqlite3.la
 %endif
 %endif
