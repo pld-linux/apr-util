@@ -11,7 +11,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.2
-Release:	3
+Release:	4
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -33,7 +33,7 @@ BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
-%{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
@@ -108,7 +108,7 @@ Requires:	apr-devel >= 1:1.1.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
-%{?with_ldap:Requires:	openldap-devel}
+%{?with_ldap:Requires:	openldap-devel >= 2.3.0}
 
 %description devel
 Header files and development documentation for apr-util.
