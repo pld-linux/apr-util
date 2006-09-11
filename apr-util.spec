@@ -11,7 +11,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.7
-Release:	2
+Release:	3
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -145,6 +145,24 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 
 rm -rf xml/expat
 
+echo '
+<Layout PLD>
+    prefix:        %{_prefix}
+    exec_prefix:   %{_exec_prefix}
+    bindir:        %{_bindir}
+    sbindir:       %{_sbindir}
+    libdir:        %{_libdir}
+    libexecdir:    %{_libdir}/apr
+    mandir:        %{_mandir}
+    sysconfdir:    %{_sysconfdir}
+    datadir:       %{_datadir}
+    installbuilddir: %{_datadir}/build
+    includedir:    %{_includedir}
+    localstatedir: %{_localstatedir}
+    runtimedir:    %{_localstatedir}/run
+</Layout>
+' > config.layout
+
 %build
 ./buildconf \
 	--with-apr=%{_datadir}/apr
@@ -153,6 +171,7 @@ rm -rf xml/expat
 %endif
 
 %configure \
+	--enable-layout=PLD \
 	--with-apr=%{_bindir}/apr-1-config \
 %if %{with ldap}
 	--with-ldap \
@@ -196,6 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
  
 %if %{with dso}
+install -d $RPM_BUILD_ROOT%{_libdir}
 %if %{with mysql}
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_mysql.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_mysql.so
