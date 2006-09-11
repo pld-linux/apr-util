@@ -11,7 +11,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.7
-Release:	3
+Release:	4
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -160,6 +160,7 @@ echo '
     includedir:    %{_includedir}
     localstatedir: %{_localstatedir}
     runtimedir:    %{_localstatedir}/run
+    libsuffix:     -${APRUTIL_MAJOR_VERSION}
 </Layout>
 ' > config.layout
 
