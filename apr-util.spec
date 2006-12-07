@@ -10,19 +10,18 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.7
-Release:	4
+Version:	1.2.8
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	a4c527f08ae2298e62a88472291bf066
+# Source0-md5:	b122f35ee6883a216cd2e7d44504521e
 # http://apache.webthing.com/database/apr_dbd_mysql.c
 Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
-Patch1:		%{name}-mysql.patch
-Patch2:		%{name}-dso.patch
-Patch3:		%{name}-dbd.patch
+Patch1:		%{name}-dso.patch
+Patch2:		%{name}-dbd.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
@@ -130,7 +129,6 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 %if %{with mysql}
 cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %else
@@ -139,8 +137,8 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %{__sed} -i -e 's/^\(.*gen-build\.py\)/#\1/' buildconf
 %endif
 %if %{with dso}
+%patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %endif
 
 rm -rf xml/expat
