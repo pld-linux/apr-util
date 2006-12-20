@@ -1,3 +1,4 @@
+#
 # Conditional build:
 %bcond_without	ldap	# without LDAP support
 %bcond_without	mysql	# with MySQL support
@@ -9,19 +10,18 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.2
-Release:	1.23
+Version:	1.2.8
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	694228b227e30cb9da3823514516e91c
+# Source0-md5:	b122f35ee6883a216cd2e7d44504521e
 # http://apache.webthing.com/database/apr_dbd_mysql.c
 Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
-Patch1:		%{name}-mysql.patch
-Patch2:		%{name}-db4.4.patch
-Patch3:		%{name}-dso.patch
+Patch1:		%{name}-dso.patch
+Patch2:		%{name}-dbd.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
@@ -31,7 +31,7 @@ BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
-%{?with_ldap:BuildRequires:	openldap-devel}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
@@ -50,36 +50,52 @@ Biblioteka towarzysz±ca dla biblioteki Apache Portable Runtime
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
+Summary(pl):	Sterownik DBD dla MySQL-a
+License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-License:	GPL
 
 %description dbd-mysql
 DBD driver for MySQL.
 
+%description dbd-mysql -l pl
+Sterownik DBD dla MySQL-a.
+
 %package dbd-pgsql
 Summary:	DBD driver for PostgreSQL
+Summary(pl):	Sterownik DBD dla PostgreSQL-a
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-pgsql
 DBD driver for PostgreSQL.
 
+%description dbd-pgsql -l pl
+Sterownik DBD dla PostgreSQL-a.
+
 %package dbd-sqlite2
 Summary:	DBD driver for SQLite 2
+Summary(pl):	Sterownik DBD dla SQLite 2
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite2
-DBD driver for SQLite 2
+DBD driver for SQLite 2.
+
+%description dbd-sqlite2 -l pl
+Sterownik DBD dla SQLite 2.
 
 %package dbd-sqlite3
 Summary:	DBD driver for SQLite 3
+Summary(pl):	Sterownik DBD dla SQLite 3
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite3
-DBD driver for SQLite 3
+DBD driver for SQLite 3.
+
+%description dbd-sqlite3 -l pl
+Sterownik DBD dla SQLite 3.
 
 %package devel
 Summary:	Header files and development documentation for apr-util
@@ -90,7 +106,7 @@ Requires:	apr-devel >= 1:1.1.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
-%{?with_ldap:Requires:	openldap-devel}
+%{?with_ldap:Requires:	openldap-devel >= 2.3.0}
 
 %description devel
 Header files and development documentation for apr-util.
@@ -113,8 +129,6 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 %if %{with mysql}
 cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %else
@@ -122,15 +136,41 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 # (and it shouldn't: apr-devel should have it -glen)
 %{__sed} -i -e 's/^\(.*gen-build\.py\)/#\1/' buildconf
 %endif
-%{?with_dso:%patch3 -p1}
+%if %{with dso}
+%patch1 -p1
+%patch2 -p1
+%endif
 
 rm -rf xml/expat
+
+echo '
+<Layout PLD>
+    prefix:        %{_prefix}
+    exec_prefix:   %{_exec_prefix}
+    bindir:        %{_bindir}
+    sbindir:       %{_sbindir}
+    libdir:        %{_libdir}
+    libexecdir:    %{_libdir}/apr
+    mandir:        %{_mandir}
+    sysconfdir:    %{_sysconfdir}
+    datadir:       %{_datadir}
+    installbuilddir: %{_datadir}/build
+    includedir:    %{_includedir}
+    localstatedir: %{_localstatedir}
+    runtimedir:    %{_localstatedir}/run
+    libsuffix:     -${APRUTIL_MAJOR_VERSION}
+</Layout>
+' > config.layout
 
 %build
 ./buildconf \
 	--with-apr=%{_datadir}/apr
+%if %{with dso}
+%{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_[^ ]*\.lo,,g' build-outputs.mk
+%endif
 
 %configure \
+	--enable-layout=PLD \
 	--with-apr=%{_bindir}/apr-1-config \
 %if %{with ldap}
 	--with-ldap \
@@ -138,6 +178,8 @@ rm -rf xml/expat
 	--with-ldap-lib=%{_libdir} \
 %endif
 	--with-iconv=%{_prefix} \
+	--with-berkeley-db=%{_prefix} \
+	--with-dbm=db4 \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
@@ -147,22 +189,20 @@ rm -rf xml/expat
 	CC="%{__cc}"
 
 %if %{with dso}
-# ugly hack until they fix their build system to provide this
-%{__sed} -i -e 's,-l\(pq\|mysqlclient_r\|sqlite\|sqlite3\) ,,g' Makefile apr-util.pc apu-1-config
-%{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_.*\.lo,,g' build-outputs.mk
-rm -f libaprutil-1.la
-%{__make} libaprutil-1.la
-
 %if %{with mysql}
+%{__make} dbd/apr_dbd_mysql.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_mysql.lo -lmysqlclient_r -o dbd/libapr_dbd_mysql.la
 %endif
 %if %{with pgsql}
+%{__make} dbd/apr_dbd_pgsql.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_pgsql.lo -lpq  -o dbd/libapr_dbd_pgsql.la
 %endif
 %if %{with sqlite2}
+%{__make} dbd/apr_dbd_sqlite2.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite2.lo -o dbd/libapr_dbd_sqlite2.la
 %endif
 %if %{with sqlite3}
+%{__make} dbd/apr_dbd_sqlite3.lo
 libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite3.lo -lsqlite3 -o dbd/libapr_dbd_sqlite3.la
 %endif
 %endif
@@ -174,6 +214,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
  
 %if %{with dso}
+install -d $RPM_BUILD_ROOT%{_libdir}
 %if %{with mysql}
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_mysql.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_mysql.so
