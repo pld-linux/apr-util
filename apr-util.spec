@@ -11,7 +11,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.8
-Release:	2
+Release:	2.1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -41,6 +41,7 @@ Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
+%define		_noautoreqdep libtool(%{_libdir}/libmysqlclient_r.la)
 
 %description
 A companion library to Apache Portable Runtime.
