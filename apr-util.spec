@@ -11,7 +11,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.8
-Release:	2.1
+Release:	3
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -23,6 +23,7 @@ Patch0:		%{name}-link.patch
 Patch1:		%{name}-dso.patch
 Patch2:		%{name}-dbd.patch
 Patch3:		%{name}-db45.patch
+Patch4:		%{name}-mysql-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
@@ -41,7 +42,6 @@ Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
-%define		_noautoreqdep libtool(%{_libdir}/libmysqlclient_r.la)
 
 %description
 A companion library to Apache Portable Runtime.
@@ -143,6 +143,7 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %patch2 -p1
 %endif
 %patch3 -p1
+%patch4 -p1
 
 rm -rf xml/expat
 
