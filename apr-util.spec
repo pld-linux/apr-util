@@ -8,7 +8,7 @@
 %bcond_without	dso	# experimental dso linking
 #
 Summary:	A companion library to Apache Portable Runtime
-Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
+Summary(pl.UTF-8):   Biblioteka towarzyszƒÖca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.8
 Release:	3
@@ -46,13 +46,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 A companion library to Apache Portable Runtime.
 
-%description -l pl
-Biblioteka towarzysz±ca dla biblioteki Apache Portable Runtime
-(przeno∂nej biblioteki uruchomieniowej).
+%description -l pl.UTF-8
+Biblioteka towarzyszƒÖca dla biblioteki Apache Portable Runtime
+(przeno≈õnej biblioteki uruchomieniowej).
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
-Summary(pl):	Sterownik DBD dla MySQL-a
+Summary(pl.UTF-8):   Sterownik DBD dla MySQL-a
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -60,48 +60,48 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 %description dbd-mysql
 DBD driver for MySQL.
 
-%description dbd-mysql -l pl
+%description dbd-mysql -l pl.UTF-8
 Sterownik DBD dla MySQL-a.
 
 %package dbd-pgsql
 Summary:	DBD driver for PostgreSQL
-Summary(pl):	Sterownik DBD dla PostgreSQL-a
+Summary(pl.UTF-8):   Sterownik DBD dla PostgreSQL-a
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-pgsql
 DBD driver for PostgreSQL.
 
-%description dbd-pgsql -l pl
+%description dbd-pgsql -l pl.UTF-8
 Sterownik DBD dla PostgreSQL-a.
 
 %package dbd-sqlite2
 Summary:	DBD driver for SQLite 2
-Summary(pl):	Sterownik DBD dla SQLite 2
+Summary(pl.UTF-8):   Sterownik DBD dla SQLite 2
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite2
 DBD driver for SQLite 2.
 
-%description dbd-sqlite2 -l pl
+%description dbd-sqlite2 -l pl.UTF-8
 Sterownik DBD dla SQLite 2.
 
 %package dbd-sqlite3
 Summary:	DBD driver for SQLite 3
-Summary(pl):	Sterownik DBD dla SQLite 3
+Summary(pl.UTF-8):   Sterownik DBD dla SQLite 3
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite3
 DBD driver for SQLite 3.
 
-%description dbd-sqlite3 -l pl
+%description dbd-sqlite3 -l pl.UTF-8
 Sterownik DBD dla SQLite 3.
 
 %package devel
 Summary:	Header files and development documentation for apr-util
-Summary(pl):	Pliki nag≥Ûwkowe i dokumentacja programisty do apr-util
+Summary(pl.UTF-8):   Pliki nag≈Ç√≥wkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apr-devel >= 1:1.1.0
@@ -113,19 +113,19 @@ Requires:	gdbm-devel
 %description devel
 Header files and development documentation for apr-util.
 
-%description devel -l pl
-Pliki nag≥Ûwkowe i dokumentacja programisty do apr-util.
+%description devel -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe i dokumentacja programisty do apr-util.
 
 %package static
 Summary:	Static apr-util library
-Summary(pl):	Statyczna biblioteka apr-util
+Summary(pl.UTF-8):   Statyczna biblioteka apr-util
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static apr-util library.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczna biblioteka apr-util.
 
 %prep
