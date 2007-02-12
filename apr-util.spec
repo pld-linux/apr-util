@@ -8,7 +8,7 @@
 %bcond_without	dso	# experimental dso linking
 #
 Summary:	A companion library to Apache Portable Runtime
-Summary(pl.UTF-8):   Biblioteka towarzysząca Apache Portable Runtime
+Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.8
 Release:	3
@@ -52,7 +52,7 @@ Biblioteka towarzysząca dla biblioteki Apache Portable Runtime
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
-Summary(pl.UTF-8):   Sterownik DBD dla MySQL-a
+Summary(pl.UTF-8):	Sterownik DBD dla MySQL-a
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -65,7 +65,7 @@ Sterownik DBD dla MySQL-a.
 
 %package dbd-pgsql
 Summary:	DBD driver for PostgreSQL
-Summary(pl.UTF-8):   Sterownik DBD dla PostgreSQL-a
+Summary(pl.UTF-8):	Sterownik DBD dla PostgreSQL-a
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -77,7 +77,7 @@ Sterownik DBD dla PostgreSQL-a.
 
 %package dbd-sqlite2
 Summary:	DBD driver for SQLite 2
-Summary(pl.UTF-8):   Sterownik DBD dla SQLite 2
+Summary(pl.UTF-8):	Sterownik DBD dla SQLite 2
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -89,7 +89,7 @@ Sterownik DBD dla SQLite 2.
 
 %package dbd-sqlite3
 Summary:	DBD driver for SQLite 3
-Summary(pl.UTF-8):   Sterownik DBD dla SQLite 3
+Summary(pl.UTF-8):	Sterownik DBD dla SQLite 3
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
@@ -101,7 +101,7 @@ Sterownik DBD dla SQLite 3.
 
 %package devel
 Summary:	Header files and development documentation for apr-util
-Summary(pl.UTF-8):   Pliki nagłówkowe i dokumentacja programisty do apr-util
+Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apr-devel >= 1:1.1.0
@@ -118,7 +118,7 @@ Pliki nagłówkowe i dokumentacja programisty do apr-util.
 
 %package static
 Summary:	Static apr-util library
-Summary(pl.UTF-8):   Statyczna biblioteka apr-util
+Summary(pl.UTF-8):	Statyczna biblioteka apr-util
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
