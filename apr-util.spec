@@ -24,11 +24,12 @@ Patch1:		%{name}-dso.patch
 Patch2:		%{name}-dbd.patch
 Patch3:		%{name}-db45.patch
 Patch4:		%{name}-mysql-link.patch
+Patch5:		%{name}-db46.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
 BuildRequires:	autoconf
-BuildRequires:	db-devel >= 4.5
+BuildRequires:	db-devel >= 4.6
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -144,6 +145,7 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %endif
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 rm -rf xml/expat
 
@@ -183,7 +185,7 @@ echo '
 %endif
 	--with-iconv=%{_prefix} \
 	--with-berkeley-db=%{_prefix} \
-	--with-dbm=db45 \
+	--with-dbm=db46 \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
