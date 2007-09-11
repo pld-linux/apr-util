@@ -10,13 +10,13 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.8
-Release:	4
+Version:	1.2.10
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	b122f35ee6883a216cd2e7d44504521e
+# Source0-md5:	9277c21fe41065bd359db98c474aa998
 # http://apache.webthing.com/database/apr_dbd_mysql.c
 Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
@@ -24,7 +24,6 @@ Patch1:		%{name}-dso.patch
 Patch2:		%{name}-dbd.patch
 Patch3:		%{name}-db45.patch
 Patch4:		%{name}-mysql-link.patch
-Patch5:		%{name}-db46.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
@@ -145,7 +144,6 @@ cp %{SOURCE1} dbd/apr_dbd_mysql.c
 %endif
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 rm -rf xml/expat
 
