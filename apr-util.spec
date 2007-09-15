@@ -10,24 +10,24 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.8
-Release:	2.1
+Version:	1.2.10
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	b122f35ee6883a216cd2e7d44504521e
+# Source0-md5:	9277c21fe41065bd359db98c474aa998
 # http://apache.webthing.com/database/apr_dbd_mysql.c
 Source1:	apr_dbd_mysql.c
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-dso.patch
 Patch2:		%{name}-dbd.patch
-Patch3:		%{name}-db45.patch
+Patch3:		%{name}-mysql-link.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.1.0
 %{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
 BuildRequires:	autoconf
-BuildRequires:	db-devel >= 4.5
+BuildRequires:	db-devel
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -41,7 +41,6 @@ Requires:	apr >= 1:1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
-%define		_noautoreqdep libtool(%{_libdir}/libmysqlclient_r.la)
 
 %description
 A companion library to Apache Portable Runtime.
@@ -182,7 +181,7 @@ echo '
 %endif
 	--with-iconv=%{_prefix} \
 	--with-berkeley-db=%{_prefix} \
-	--with-dbm=db45 \
+	--with-dbm=db4 \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
