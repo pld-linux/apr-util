@@ -33,7 +33,7 @@ BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
-%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
@@ -108,7 +108,7 @@ Requires:	apr-devel >= 1:1.1.0
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
-%{?with_ldap:Requires:	openldap-devel >= 2.3.0}
+%{?with_ldap:Requires:	openldap-devel >= 2.4.6}
 
 %description devel
 Header files and development documentation for apr-util.
