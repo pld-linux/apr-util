@@ -10,23 +10,19 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.10
-Release:	4
+Version:	1.2.12
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	9277c21fe41065bd359db98c474aa998
-# http://apache.webthing.com/database/apr_dbd_mysql.c
-Source1:	apr_dbd_mysql.c
+# Source0-md5:	4ec0474c61113dcb57943916e7f53522
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-dso.patch
 Patch2:		%{name}-dbd.patch
 Patch3:		%{name}-db45.patch
-Patch4:		%{name}-mysql-link.patch
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:1.1.0
-%{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
+BuildRequires:	apr-devel >= 1:1.2.12
 BuildRequires:	autoconf
 BuildRequires:	db-devel >= 4.6
 BuildRequires:	expat-devel
@@ -38,7 +34,7 @@ BuildRequires:	libtool
 BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
-Requires:	apr >= 1:1.1.0
+Requires:	apr >= 1:1.2.12
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -104,7 +100,7 @@ Summary:	Header files and development documentation for apr-util
 Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel >= 1:1.1.0
+Requires:	apr-devel >= 1:1.2.12
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
@@ -131,19 +127,11 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q
 %patch0 -p1
-%if %{with mysql}
-cp %{SOURCE1} dbd/apr_dbd_mysql.c
-%else
-# not needed, gen-build.py is not packaged in apr-util
-# (and it shouldn't: apr-devel should have it -glen)
-%{__sed} -i -e 's/^\(.*gen-build\.py\)/#\1/' buildconf
-%endif
 %if %{with dso}
 %patch1 -p1
 %patch2 -p1
 %endif
 %patch3 -p1
-%patch4 -p1
 
 rm -rf xml/expat
 
@@ -235,7 +223,7 @@ mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite3.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite3.so
 %endif
-rm -f $RPM_BUILD_ROOT%{_libdir}/libapr_dbd_*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libapr_dbd_*.{la,a}
 %endif
 
 %clean
@@ -247,13 +235,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGES
-%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/libaprutil-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libaprutil-1.so.0
 
 %if %{with dso}
 %if %{with mysql}
 %files dbd-mysql
 %defattr(644,root,root,755)
-%doc INSTALL.MySQL
+%doc README.MySQL
 %attr(755,root,root) %{_libdir}/apr_dbd_mysql.so
 %endif
 
@@ -278,13 +267,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/libaprutil*.so
-%{_libdir}/lib*.la
+%attr(755,root,root) %{_bindir}/apu-1-config
+%attr(755,root,root) %{_libdir}/libaprutil-1.so
+%{_libdir}/libaprutil-1.la
 %{_libdir}/aprutil.exp
 %{_includedir}
 %{_pkgconfigdir}/apr-util-1.pc
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libaprutil-1.a
