@@ -24,7 +24,7 @@ Patch3:		%{name}-db45.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.2.12
 BuildRequires:	autoconf
-BuildRequires:	db-devel >= 4.6
+BuildRequires:	db-devel >= 4.5
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
