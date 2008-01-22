@@ -171,7 +171,7 @@ echo '
 %endif
 	--with-iconv=%{_prefix} \
 	--with-berkeley-db=%{_prefix} \
-	--with-dbm=db46 \
+	--with-dbm=db45 \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
