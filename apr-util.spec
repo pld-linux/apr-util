@@ -8,37 +8,33 @@
 %bcond_without	dso	# experimental dso linking
 #
 Summary:	A companion library to Apache Portable Runtime
-Summary(pl):	Biblioteka towarzysz±ca Apache Portable Runtime
+Summary(pl.UTF-8):	Biblioteka towarzyszƒÖca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.7
-Release:	5
+Version:	1.2.12
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	a4c527f08ae2298e62a88472291bf066
-# http://apache.webthing.com/database/apr_dbd_mysql.c
-Source1:	apr_dbd_mysql.c
+# Source0-md5:	4ec0474c61113dcb57943916e7f53522
 Patch0:		%{name}-link.patch
-Patch1:		%{name}-mysql.patch
-Patch2:		%{name}-dso.patch
-Patch3:		%{name}-dbd.patch
-Patch4:		%{name}-db45.patch
+Patch1:		%{name}-dso.patch
+Patch2:		%{name}-dbd.patch
+Patch3:		%{name}-db45.patch
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:1.1.0
-%{?with_mysql:BuildRequires:	apr-devel >= 1:1.2.2-2.6}
+BuildRequires:	apr-devel >= 1:1.2.12
 BuildRequires:	autoconf
 BuildRequires:	db-devel >= 4.5
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
-%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
-Requires:	apr >= 1:1.1.0
+Requires:	apr >= 1:1.2.12
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -46,13 +42,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 A companion library to Apache Portable Runtime.
 
-%description -l pl
-Biblioteka towarzysz±ca dla biblioteki Apache Portable Runtime
-(przeno∂nej biblioteki uruchomieniowej).
+%description -l pl.UTF-8
+Biblioteka towarzyszƒÖca dla biblioteki Apache Portable Runtime
+(przeno≈õnej biblioteki uruchomieniowej).
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
-Summary(pl):	Sterownik DBD dla MySQL-a
+Summary(pl.UTF-8):	Sterownik DBD dla MySQL-a
 License:	GPL
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -60,90 +56,82 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 %description dbd-mysql
 DBD driver for MySQL.
 
-%description dbd-mysql -l pl
+%description dbd-mysql -l pl.UTF-8
 Sterownik DBD dla MySQL-a.
 
 %package dbd-pgsql
 Summary:	DBD driver for PostgreSQL
-Summary(pl):	Sterownik DBD dla PostgreSQL-a
+Summary(pl.UTF-8):	Sterownik DBD dla PostgreSQL-a
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-pgsql
 DBD driver for PostgreSQL.
 
-%description dbd-pgsql -l pl
+%description dbd-pgsql -l pl.UTF-8
 Sterownik DBD dla PostgreSQL-a.
 
 %package dbd-sqlite2
 Summary:	DBD driver for SQLite 2
-Summary(pl):	Sterownik DBD dla SQLite 2
+Summary(pl.UTF-8):	Sterownik DBD dla SQLite 2
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite2
 DBD driver for SQLite 2.
 
-%description dbd-sqlite2 -l pl
+%description dbd-sqlite2 -l pl.UTF-8
 Sterownik DBD dla SQLite 2.
 
 %package dbd-sqlite3
 Summary:	DBD driver for SQLite 3
-Summary(pl):	Sterownik DBD dla SQLite 3
+Summary(pl.UTF-8):	Sterownik DBD dla SQLite 3
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description dbd-sqlite3
 DBD driver for SQLite 3.
 
-%description dbd-sqlite3 -l pl
+%description dbd-sqlite3 -l pl.UTF-8
 Sterownik DBD dla SQLite 3.
 
 %package devel
 Summary:	Header files and development documentation for apr-util
-Summary(pl):	Pliki nag≥Ûwkowe i dokumentacja programisty do apr-util
+Summary(pl.UTF-8):	Pliki nag≈Ç√≥wkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel >= 1:1.1.0
+Requires:	apr-devel >= 1:1.2.12
 Requires:	db-devel
 Requires:	expat-devel
 Requires:	gdbm-devel
-%{?with_ldap:Requires:	openldap-devel >= 2.3.0}
+%{?with_ldap:Requires:	openldap-devel >= 2.4.6}
 
 %description devel
 Header files and development documentation for apr-util.
 
-%description devel -l pl
-Pliki nag≥Ûwkowe i dokumentacja programisty do apr-util.
+%description devel -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe i dokumentacja programisty do apr-util.
 
 %package static
 Summary:	Static apr-util library
-Summary(pl):	Statyczna biblioteka apr-util
+Summary(pl.UTF-8):	Statyczna biblioteka apr-util
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 Static apr-util library.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczna biblioteka apr-util.
 
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%if %{with mysql}
-cp %{SOURCE1} dbd/apr_dbd_mysql.c
-%else
-# not needed, gen-build.py is not packaged in apr-util
-# (and it shouldn't: apr-devel should have it -glen)
-%{__sed} -i -e 's/^\(.*gen-build\.py\)/#\1/' buildconf
-%endif
 %if %{with dso}
+%patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %endif
-%patch4 -p1
+%patch3 -p1
 
 rm -rf xml/expat
 
@@ -235,7 +223,7 @@ mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
 libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite3.la $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite3.so
 %endif
-rm -f $RPM_BUILD_ROOT%{_libdir}/libapr_dbd_*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libapr_dbd_*.{la,a}
 %endif
 
 %clean
@@ -247,13 +235,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGES
-%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/libaprutil-1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libaprutil-1.so.0
 
 %if %{with dso}
 %if %{with mysql}
 %files dbd-mysql
 %defattr(644,root,root,755)
-%doc INSTALL.MySQL
+%doc README.MySQL
 %attr(755,root,root) %{_libdir}/apr_dbd_mysql.so
 %endif
 
@@ -278,13 +267,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/libaprutil*.so
-%{_libdir}/lib*.la
+%attr(755,root,root) %{_bindir}/apu-1-config
+%attr(755,root,root) %{_libdir}/libaprutil-1.so
+%{_libdir}/libaprutil-1.la
 %{_libdir}/aprutil.exp
 %{_includedir}
 %{_pkgconfigdir}/apr-util-1.pc
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libaprutil-1.a
