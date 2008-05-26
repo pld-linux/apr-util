@@ -24,7 +24,7 @@ Patch3:		%{name}-db45.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.2.12
 BuildRequires:	autoconf
-%if %{pld_release} == "ti"
+%if "%{pld_release}" == "ti"
 BuildRequires:	db-devel >= 4.5
 %else
 BuildRequires:	db-devel >= 4.6
@@ -176,7 +176,7 @@ echo '
 %endif
 	--with-iconv=%{_prefix} \
 	--with-berkeley-db=%{_prefix} \
-%if %{pld_release} == "ti"
+%if "%{pld_release}" == "ti"
 	--with-dbm=db45 \
 %else
 	--with-dbm=db46 \
