@@ -11,7 +11,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
 Version:	1.2.12
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -24,13 +24,18 @@ Patch3:		%{name}-db45.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.2.12
 BuildRequires:	autoconf
+%if %{pld_release} == "ti"
+BuildRequires:	db-devel >= 4.5
+%else
 BuildRequires:	db-devel >= 4.6
+%endif
 BuildRequires:	expat-devel
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
+BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
@@ -171,7 +176,11 @@ echo '
 %endif
 	--with-iconv=%{_prefix} \
 	--with-berkeley-db=%{_prefix} \
+%if %{pld_release} == "ti"
+	--with-dbm=db45 \
+%else
 	--with-dbm=db46 \
+%endif
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
