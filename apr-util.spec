@@ -1,45 +1,43 @@
 #
 # Conditional build:
-%bcond_without	ldap	# without LDAP support
-%bcond_without	mysql	# with MySQL support
-%bcond_without	pgsql	# without PostgreSQL support
-%bcond_with	sqlite2	# with SQLite 2.x support
-%bcond_without	sqlite3	# without SQLite3 support
-%bcond_without	dso	# experimental dso linking
+%bcond_with	freetds	# with FreeTDS (sybdb) DBD module (unfinished)
+%bcond_without	mysql	# with MySQL DBD module
+%bcond_with	oracle	# with Oracle DBD module (BR: proprietary libs)
+%bcond_without	pgsql	# without PostgreSQL DBD module
+%bcond_with	sqlite2	# with SQLite 2.x DBD module
+%bcond_without	sqlite3	# without SQLite3 DBD module
+%bcond_without	ldap	# without LDAP module
 #
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.2.12
-Release:	3
+Version:	1.3.0
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	4ec0474c61113dcb57943916e7f53522
+# Source0-md5:	3cb56bbeefb72def43dee4bf69c46a21
 Patch0:		%{name}-link.patch
-Patch1:		%{name}-dso.patch
-Patch2:		%{name}-dbd.patch
-Patch3:		%{name}-db45.patch
+Patch1:		%{name}-db47.patch
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:1.2.12
+BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	autoconf
 %if "%{pld_release}" == "ti"
 BuildRequires:	db-devel >= 4.5
 %else
-BuildRequires:	db-devel >= 4.6
+BuildRequires:	db-devel >= 4.7
 %endif
 BuildRequires:	expat-devel
-BuildRequires:	gdbm-devel
+%{?with_freetds:BuildRequires:	freetds-devel}
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpm >= 4.4.9-56
-BuildRequires:	sed >= 4.0
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
-Requires:	apr >= 1:1.2.12
+Requires:	apr >= 1:1.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -50,6 +48,18 @@ A companion library to Apache Portable Runtime.
 %description -l pl.UTF-8
 Biblioteka towarzysząca dla biblioteki Apache Portable Runtime
 (przenośnej biblioteki uruchomieniowej).
+
+%package dbd-freetds
+Summary:	DBD driver for FreeTDS (Sybase/MS SQL)
+Summary(pl.UTF-8):	Sterownik DBD dla FreeTDS (Sybase/MS SQL)
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbd-freetds
+DBD driver for FreeTDS (Sybase/MS SQL).
+
+%description dbd-freetds -l pl.UTF-8
+Sterownik DBD dla FreeTDS (Sybase/MS SQL).
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
@@ -63,6 +73,18 @@ DBD driver for MySQL.
 
 %description dbd-mysql -l pl.UTF-8
 Sterownik DBD dla MySQL-a.
+
+%package dbd-oracle
+Summary:	DBD driver for Oracle
+Summary(pl.UTF-8):	Sterownik DBD dla Oracle'a
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbd-oracle
+DBD driver for Oracle.
+
+%description dbd-oracle -l pl.UTF-8
+Sterownik DBD dla Oracle'a.
 
 %package dbd-pgsql
 Summary:	DBD driver for PostgreSQL
@@ -100,16 +122,26 @@ DBD driver for SQLite 3.
 %description dbd-sqlite3 -l pl.UTF-8
 Sterownik DBD dla SQLite 3.
 
+%package ldap
+Summary:	APR LDAP driver
+Summary(pl.UTF-8):	Sterownik APR dla LDAP
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description ldap
+APR LDAP driver.
+
+%description ldap -l pl.UTF-8
+Sterownik APR dla LDAP.
+
 %package devel
 Summary:	Header files and development documentation for apr-util
 Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel >= 1:1.2.12
+Requires:	apr-devel >= 1:1.3.0
 Requires:	db-devel
 Requires:	expat-devel
-Requires:	gdbm-devel
-%{?with_ldap:Requires:	openldap-devel >= 2.4.6}
 
 %description devel
 Header files and development documentation for apr-util.
@@ -132,11 +164,7 @@ Statyczna biblioteka apr-util.
 %prep
 %setup -q
 %patch0 -p1
-%if %{with dso}
 %patch1 -p1
-%patch2 -p1
-%endif
-%patch3 -p1
 
 rm -rf xml/expat
 
@@ -162,26 +190,25 @@ echo '
 %build
 ./buildconf \
 	--with-apr=%{_datadir}/apr
-%if %{with dso}
-%{__sed} -i -e '/OBJECTS_all/s, dbd/apr_dbd_[^ ]*\.lo,,g' build-outputs.mk
-%endif
 
 %configure \
 	--enable-layout=PLD \
 	--with-apr=%{_bindir}/apr-1-config \
+	--with-berkeley-db=%{_prefix} \
+%if "%{pld_release}" == "ti"
+	--with-dbm=db45 \
+%else
+	--with-dbm=db47 \
+%endif
+	--with-iconv=%{_prefix} \
 %if %{with ldap}
 	--with-ldap \
 	--with-ldap-include=%{_prefix}/include \
 	--with-ldap-lib=%{_libdir} \
 %endif
-	--with-iconv=%{_prefix} \
-	--with-berkeley-db=%{_prefix} \
-%if "%{pld_release}" == "ti"
-	--with-dbm=db45 \
-%else
-	--with-dbm=db46 \
-%endif
+	%{!?with_freetds:--without-freetds} \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
+	%{?with_oracle:--with-oracle} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
 	%{!?with_sqlite3:--without-sqlite3}
@@ -189,51 +216,13 @@ echo '
 %{__make} \
 	CC="%{__cc}"
 
-%if %{with dso}
-%if %{with mysql}
-%{__make} dbd/apr_dbd_mysql.lo
-libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_mysql.lo -lmysqlclient_r -o dbd/libapr_dbd_mysql.la
-%endif
-%if %{with pgsql}
-%{__make} dbd/apr_dbd_pgsql.lo
-libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_pgsql.lo -lpq  -o dbd/libapr_dbd_pgsql.la
-%endif
-%if %{with sqlite2}
-%{__make} dbd/apr_dbd_sqlite2.lo
-libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite2.lo -o dbd/libapr_dbd_sqlite2.la
-%endif
-%if %{with sqlite3}
-%{__make} dbd/apr_dbd_sqlite3.lo
-libtool --mode=link --tag=CC %{__cc} -rpath %{_libdir} -avoid-version dbd/apr_dbd_sqlite3.lo -lsqlite3 -o dbd/libapr_dbd_sqlite3.la
-%endif
-%endif
-
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
  
-%if %{with dso}
-install -d $RPM_BUILD_ROOT%{_libdir}
-%if %{with mysql}
-libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_mysql.la $RPM_BUILD_ROOT%{_libdir}
-mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_mysql.so
-%endif
-%if %{with pgsql}
-libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_pgsql.la $RPM_BUILD_ROOT%{_libdir}
-mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_pgsql.so
-%endif
-%if %{with sqlite2}
-libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite2.la $RPM_BUILD_ROOT%{_libdir}
-mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite2.so
-%endif
-%if %{with sqlite3}
-libtool --mode=install /usr/bin/install -c -m 755 dbd/libapr_dbd_sqlite3.la $RPM_BUILD_ROOT%{_libdir}
-mv $RPM_BUILD_ROOT%{_libdir}/{lib,}apr_dbd_sqlite3.so
-%endif
-rm -f $RPM_BUILD_ROOT%{_libdir}/libapr_dbd_*.{la,a}
-%endif
+rm $RPM_BUILD_ROOT%{_libdir}/apr-util-1/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -243,35 +232,59 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES
+%doc CHANGES NOTICE README
 %attr(755,root,root) %{_libdir}/libaprutil-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libaprutil-1.so.0
+%dir %{_libdir}/apr-util-1
 
-%if %{with dso}
+%if %{with freetds}
+%files dbd-freetds
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_freetds-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_freetds.so
+%endif
+
 %if %{with mysql}
 %files dbd-mysql
 %defattr(644,root,root,755)
 %doc README.MySQL
-%attr(755,root,root) %{_libdir}/apr_dbd_mysql.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql.so
+%endif
+
+%if %{with oracle}
+%files dbd-oracle
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_oracle-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_oracle.so
 %endif
 
 %if %{with pgsql}
 %files dbd-pgsql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr_dbd_pgsql.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_pgsql-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_pgsql.so
 %endif
 
 %if %{with sqlite2}
 %files dbd-sqlite2
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr_dbd_sqlite2.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite2-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite2.so
 %endif
 
 %if %{with sqlite3}
 %files dbd-sqlite3
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr_dbd_sqlite3.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite3-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite3.so
 %endif
+
+%if %{with ldap}
+%files ldap
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_ldap-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_ldap.so
 %endif
 
 %files devel
