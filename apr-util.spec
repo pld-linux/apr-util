@@ -1,7 +1,8 @@
 #
 # Conditional build:
 %bcond_with	freetds	# with FreeTDS (sybdb) DBD module (unfinished)
-%bcond_without	mysql	# with MySQL DBD module
+%bcond_without	mysql	# without MySQL DBD module
+%bcond_without	odbc	# without ODBC DBD module
 %bcond_with	oracle	# with Oracle DBD module (BR: proprietary libs)
 %bcond_without	pgsql	# without PostgreSQL DBD module
 %bcond_with	sqlite2	# with SQLite 2.x DBD module
@@ -11,13 +12,13 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.3.0
+Version:	1.3.2
 Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	3cb56bbeefb72def43dee4bf69c46a21
+# Source0-md5:	aa782fb9ced8b59c8e99419d8cdd1981
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-db47.patch
 URL:		http://apr.apache.org/
@@ -33,6 +34,7 @@ BuildRequires:	expat-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
+%{?with_odbc:BuildRequires:	unixODBC-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpm >= 4.4.9-56
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
@@ -73,6 +75,19 @@ DBD driver for MySQL.
 
 %description dbd-mysql -l pl.UTF-8
 Sterownik DBD dla MySQL-a.
+
+%package dbd-odbc
+Summary:	DBD driver for ODBC
+Summary(pl.UTF-8):	Sterownik DBD dla ODBC
+License:	GPL
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbd-odbc
+DBD driver for ODBC.
+
+%description dbd-odbc -l pl.UTF-8
+Sterownik DBD dla ODBC.
 
 %package dbd-oracle
 Summary:	DBD driver for Oracle
@@ -208,6 +223,7 @@ echo '
 %endif
 	%{!?with_freetds:--without-freetds} \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
+	%{!?with_odbc:--without-odbc} \
 	%{?with_oracle:--with-oracle} \
 	%{!?with_pgsql:--without-pgsql} \
 	%{!?with_sqlite2:--without-sqlite2} \
@@ -221,7 +237,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
- 
+
 rm $RPM_BUILD_ROOT%{_libdir}/apr-util-1/*.{la,a}
 
 %clean
@@ -250,6 +266,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.MySQL
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql-1.so
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql.so
+%endif
+
+%if %{with_odbc}
+%files dbd-odbc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_odbc-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_odbc.so
 %endif
 
 %if %{with oracle}
