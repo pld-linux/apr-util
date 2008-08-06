@@ -270,7 +270,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql.so
 %endif
 
-%if %{with_odbc}
+%if %{with odbc}
 %files dbd-odbc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_odbc-1.so
