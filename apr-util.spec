@@ -12,16 +12,15 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.3.2
+Version:	1.3.4
 Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	aa782fb9ced8b59c8e99419d8cdd1981
+# Source0-md5:	adfbe525cf3914cf769340e8f6a6d14b
 Patch0:		%{name}-link.patch
-Patch1:		%{name}-db47.patch
-Patch2:		%{name}-pg_libs.patch
+Patch1:		%{name}-config-noldap.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	autoconf
@@ -181,7 +180,6 @@ Statyczna biblioteka apr-util.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 rm -rf xml/expat
 
