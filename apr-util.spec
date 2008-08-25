@@ -13,7 +13,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
 Version:	1.3.4
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -21,19 +21,24 @@ Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 # Source0-md5:	adfbe525cf3914cf769340e8f6a6d14b
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
+Patch2:		%{name}-libtool.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	autoconf
 %if "%{pld_release}" == "ti"
 BuildRequires:	db-devel >= 4.5
 %else
+%if "%{pld_release}" == "th"
 BuildRequires:	db-devel >= 4.7
+%else
+BuildRequires:	db-devel
+%endif
 %endif
 BuildRequires:	expat-devel
 %{?with_freetds:BuildRequires:	freetds-devel}
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
-%{?with_ldap:BuildRequires:	openldap-devel >= 2.4.6}
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 %{?with_odbc:BuildRequires:	unixODBC-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpm >= 4.4.9-56
@@ -180,6 +185,7 @@ Statyczna biblioteka apr-util.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 rm -rf xml/expat
 
@@ -213,7 +219,11 @@ echo '
 %if "%{pld_release}" == "ti"
 	--with-dbm=db45 \
 %else
+%if "%{pld_release}" == "th"
 	--with-dbm=db47 \
+%else
+	--with-dbm=db4 \
+%endif
 %endif
 	--with-iconv=%{_prefix} \
 %if %{with ldap}
