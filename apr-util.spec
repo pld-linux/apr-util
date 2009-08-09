@@ -8,17 +8,18 @@
 %bcond_with	sqlite2	# with SQLite 2.x DBD module
 %bcond_without	sqlite3	# without SQLite3 DBD module
 %bcond_without	ldap	# without LDAP module
+%bcond_without	tests
 #
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.3.8
+Version:	1.3.9
 Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	34a0e815cdc2b79bf561468b84ff1aa3
+# Source0-md5:	29dd557f7bd891fc2bfdffcfa081db59
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
@@ -242,6 +243,8 @@ echo '
 %{__make} \
 	CC="%{__cc}"
 
+%{?with_tests:%{__make} -j1 check}
+
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -273,7 +276,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with mysql}
 %files dbd-mysql
 %defattr(644,root,root,755)
-%doc README.MySQL
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql-1.so
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql.so
 %endif
