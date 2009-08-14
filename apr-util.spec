@@ -14,7 +14,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
 Version:	1.3.9
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
@@ -40,11 +40,11 @@ BuildRequires:	expat-devel
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
-%{?with_odbc:BuildRequires:	unixODBC-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpm >= 4.4.9-56
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
+%{?with_odbc:BuildRequires:	unixODBC-devel}
 Requires:	apr >= 1:1.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -56,6 +56,18 @@ A companion library to Apache Portable Runtime.
 %description -l pl.UTF-8
 Biblioteka towarzysząca dla biblioteki Apache Portable Runtime
 (przenośnej biblioteki uruchomieniowej).
+
+%package dbm-db
+Summary:	DBM driver for DB
+Summary(pl.UTF-8):	Sterownik DBM dla DB
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbm-db
+DBM driver for DB.
+
+%description dbm-db -l pl.UTF-8
+Sterownik DBM dla DB.
 
 %package dbd-freetds
 Summary:	DBD driver for FreeTDS (Sybase/MS SQL)
@@ -265,6 +277,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libaprutil-1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libaprutil-1.so.0
 %dir %{_libdir}/apr-util-1
+
+%files dbm-db
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db.so
 
 %if %{with freetds}
 %files dbd-freetds
