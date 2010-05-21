@@ -9,6 +9,18 @@
 %bcond_without	sqlite3	# without SQLite3 DBD module
 %bcond_without	ldap	# without LDAP module
 %bcond_without	tests
+# define	dbver	db50
+%if 0%{!?dbver:1}
+%  if "%{pld_release}" == "ti"
+%    define	dbver	db45
+%  else
+%    if "%{pld_release}" == "th"
+%      define	dbver	db47
+%    else
+%      define	dbver	db4
+%    endif
+%  endif
+%endif
 #
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
@@ -23,6 +35,7 @@ Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
+Patch3:		%{name}-db.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	autoconf
@@ -199,6 +212,7 @@ Statyczna biblioteka apr-util.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 rm -rf xml/expat
 
@@ -229,15 +243,7 @@ echo '
 	--enable-layout=PLD \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-berkeley-db=%{_prefix} \
-%if "%{pld_release}" == "ti"
-	--with-dbm=db45 \
-%else
-%if "%{pld_release}" == "th"
-	--with-dbm=db47 \
-%else
-	--with-dbm=db4 \
-%endif
-%endif
+	--with-dbm=%{dbver} \
 	--with-iconv=%{_prefix} \
 %if %{with ldap}
 	--with-ldap \
