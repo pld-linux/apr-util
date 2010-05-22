@@ -58,6 +58,7 @@ BuildRequires:	rpm >= 4.4.9-56
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
 %{?with_odbc:BuildRequires:	unixODBC-devel}
+BuildRequires:	which
 Requires:	apr >= 1:1.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
