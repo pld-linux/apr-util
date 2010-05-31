@@ -11,15 +11,15 @@
 %bcond_without	tests
 # define	dbver	db50
 %if 0%{!?dbver:1}
-%  if "%{pld_release}" == "ti"
-%    define	dbver	db45
-%  else
-%    if "%{pld_release}" == "th"
-%      define	dbver	db47
-%    else
-%      define	dbver	db4
-%    endif
-%  endif
+  %if "%{pld_release}" == "ti"
+    %define	dbver	db45
+  %else
+    %if "%{pld_release}" == "th"
+      %define	dbver	db47
+    %else
+      %define	dbver	db4
+    %endif
+  %endif
 %endif
 #
 Summary:	A companion library to Apache Portable Runtime
