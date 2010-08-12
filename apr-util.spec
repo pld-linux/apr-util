@@ -188,7 +188,6 @@ Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apr-devel >= 1:1.3.0
-Requires:	db-devel
 Requires:	expat-devel
 
 %description devel
