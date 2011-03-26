@@ -9,19 +9,20 @@
 %bcond_without	sqlite3	# without SQLite3 DBD module
 %bcond_without	ldap	# without LDAP module
 %bcond_without	tests
+
 # define	dbver	db50
 %if 0%{!?dbver:1}
-  %if "%{pld_release}" == "ti"
-    %define	dbver	db45
-  %else
-    %if "%{pld_release}" == "th"
-      %define	dbver	db47
-    %else
-      %define	dbver	db4
-    %endif
-  %endif
+	%if "%{pld_release}" == "th"
+		%define	dbver	db47
+	%endif
+	%if "%{pld_release}" == "ti"
+		%define	dbver	db45
+	%endif
+	%if "%{pld_release}" == "ac"
+		%define	dbver	db42
+	%endif
 %endif
-#
+
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
@@ -39,14 +40,15 @@ Patch3:		%{name}-flags.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	autoconf
-%if "%{pld_release}" == "ti"
-BuildRequires:	db-devel >= 4.5
-%else
 %if "%{pld_release}" == "th"
 BuildRequires:	db-devel >= 4.7
-%else
-BuildRequires:	db-devel
 %endif
+%if "%{pld_release}" == "ti"
+BuildRequires:	db-devel >= 4.5
+%endif
+%if "%{pld_release}" == "ac"
+BuildRequires:	db-devel >= 4.2
+BuildConflicts:	db4.5-devel
 %endif
 BuildRequires:	expat-devel
 %{?with_freetds:BuildRequires:	freetds-devel}
@@ -213,6 +215,9 @@ Statyczna biblioteka apr-util.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+
+# be sure to link with db version requested
+%{__sed} -i -e 's/db4 db//' build/dbm.m4
 
 rm -rf xml/expat
 
