@@ -26,20 +26,20 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.3.10
-Release:	3
+Version:	1.3.11
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	6a6f501a1b2a45166b8ffd6df29204bb
+# Source0-md5:	2aeddb384b03f3f73107770724d5c97b
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
 Patch3:		%{name}-flags.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.3.0
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.59
 %if "%{pld_release}" == "th"
 BuildRequires:	db-devel >= 4.7
 %endif
@@ -217,9 +217,9 @@ Statyczna biblioteka apr-util.
 %patch3 -p1
 
 # be sure to link with db version requested
-%{__sed} -i -e 's/db4 db//' build/dbm.m4
+%{__sed} -i -e 's/db4 db\|db5 db//' build/dbm.m4
 
-rm -rf xml/expat
+%{__rm} -r xml/expat
 
 echo '
 <Layout PLD>
@@ -274,7 +274,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-rm $RPM_BUILD_ROOT%{_libdir}/apr-util-1/*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/apr-util-1/*.{la,a}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
