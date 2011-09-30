@@ -23,6 +23,11 @@
 	%endif
 %endif
 
+# files list broken, feel free to really fix
+%ifarch alpha
+%undefine	with_mysql
+%endif
+
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
