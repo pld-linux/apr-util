@@ -8,7 +8,9 @@
 %bcond_with	sqlite2	# with SQLite 2.x DBD module
 %bcond_without	sqlite3	# without SQLite3 DBD module
 %bcond_without	ldap	# without LDAP module
-%bcond_without	tests
+%bcond_without	nss	# without NSS crypto module
+%bcond_without	openssl	# without OpenSSL crypto module
+%bcond_without	tests	# don't perform "make check"
 
 # define	dbver	db50
 %if 0%{!?dbver:1}
@@ -31,13 +33,13 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.3.12
-Release:	2
+Version:	1.4.1
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	0f671b037ca62751a8a7005578085560
+# Source0-md5:	52b31b33fb1aa16e65ddaefc76e41151
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
@@ -59,7 +61,9 @@ BuildRequires:	expat-devel
 %{?with_freetds:BuildRequires:	freetds-devel}
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
+%{?with_nss:BuildRequires:	nss-devel}
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
+%{?with_openssl:BuildRequires:	openssl-devel}
 %{?with_pgsql:BuildRequires:	postgresql-devel}
 BuildRequires:	rpm >= 4.4.9-56
 %{?with_sqlite2:BuildRequires:	sqlite-devel >= 2}
@@ -78,17 +82,29 @@ A companion library to Apache Portable Runtime.
 Biblioteka towarzysząca dla biblioteki Apache Portable Runtime
 (przenośnej biblioteki uruchomieniowej).
 
-%package dbm-db
-Summary:	DBM driver for DB
-Summary(pl.UTF-8):	Sterownik DBM dla DB
+%package crypto-nss
+Summary:	APR cryptographic module using Mozilla NSS library
+Summary(pl.UTF-8):	Moduł kryptograficzny APR wykorzystujący bibliotekę Mozilla NSS
 Group:		Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
-%description dbm-db
-DBM driver for DB.
+%description crypto-nss
+APR cryptographic module using Mozilla NSS library.
 
-%description dbm-db -l pl.UTF-8
-Sterownik DBM dla DB.
+%description crypto-nss -l pl.UTF-8
+Moduł kryptograficzny APR wykorzystujący bibliotekę Mozilla NSS.
+
+%package crypto-openssl
+Summary:	APR cryptographic module using OpenSSL library
+Summary(pl.UTF-8):	Moduł kryptograficzny APR wykorzystujący bibliotekę OpenSSL
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description crypto-openssl
+APR cryptographic module using OpenSSL library.
+
+%description crypto-openssl -l pl.UTF-8
+Moduł kryptograficzny APR wykorzystujący bibliotekę OpenSSL.
 
 %package dbd-freetds
 Summary:	DBD driver for FreeTDS (Sybase/MS SQL)
@@ -176,6 +192,18 @@ DBD driver for SQLite 3.
 %description dbd-sqlite3 -l pl.UTF-8
 Sterownik DBD dla SQLite 3.
 
+%package dbm-db
+Summary:	DBM driver for DB
+Summary(pl.UTF-8):	Sterownik DBM dla DB
+Group:		Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description dbm-db
+DBM driver for DB.
+
+%description dbm-db -l pl.UTF-8
+Sterownik DBM dla DB.
+
 %package ldap
 Summary:	APR LDAP driver
 Summary(pl.UTF-8):	Sterownik APR dla LDAP
@@ -221,9 +249,7 @@ Statyczna biblioteka apr-util.
 %patch2 -p1
 %patch3 -p1
 
-# be sure to link with db version requested
-%{__sed} -i -e 's/db4 db\|db5 db//' build/dbm.m4
-
+# ensure system expat is used
 %{__rm} -r xml/expat
 
 echo '
@@ -253,6 +279,7 @@ echo '
 	--enable-layout=PLD \
 	--with-apr=%{_bindir}/apr-1-config \
 	--with-berkeley-db=%{_prefix} \
+	--with-crypto \
 	--with-dbm=%{dbver} \
 	--with-iconv=%{_prefix} \
 %if %{with ldap}
@@ -260,6 +287,8 @@ echo '
 	--with-ldap-include=%{_prefix}/include \
 	--with-ldap-lib=%{_libdir} \
 %endif
+	%{?with_nss:--with-nss} \
+	%{?with_openssl:--with-openssl} \
 	%{!?with_freetds:--without-freetds} \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_odbc:--without-odbc} \
@@ -294,10 +323,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libaprutil-1.so.0
 %dir %{_libdir}/apr-util-1
 
-%files dbm-db
+%if %{with nss}
+%files crypto-nss
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_nss-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_nss.so
+%endif
+
+%if %{with openssl}
+%files crypto-openssl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_openssl-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_openssl.so
+%endif
 
 %if %{with freetds}
 %files dbd-freetds
@@ -347,6 +385,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite3-1.so
 %attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite3.so
 %endif
+
+%files dbm-db
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db-1.so
+%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db.so
 
 %if %{with ldap}
 %files ldap
