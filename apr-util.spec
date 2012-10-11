@@ -15,7 +15,7 @@
 # define	dbver	db50
 %if 0%{!?dbver:1}
 	%if "%{pld_release}" == "th"
-		%define	dbver	db47
+		%define	dbver	db53
 	%endif
 	%if "%{pld_release}" == "ti"
 		%define	dbver	db45
