@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	freetds	# with FreeTDS (sybdb) DBD module (unfinished)
+%bcond_without	freetds	# without FreeTDS (sybdb) DBD module
 %bcond_without	mysql	# without MySQL DBD module
 %bcond_without	odbc	# without ODBC DBD module
 %bcond_with	oracle	# with Oracle DBD module (BR: proprietary libs)
@@ -33,13 +33,13 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.4.1
-Release:	4
+Version:	1.5.1
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	52b31b33fb1aa16e65ddaefc76e41151
+# Source0-md5:	9c1db8606e520f201c451ec9a0b095f6
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
