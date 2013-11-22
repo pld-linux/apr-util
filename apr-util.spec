@@ -33,13 +33,13 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.5.2
+Version:	1.5.3
 Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	89c1348aa79e898d7c34a6206311c9c2
+# Source0-md5:	6f3417691c7a27090f36e7cf4d94b36e
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
