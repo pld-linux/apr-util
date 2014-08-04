@@ -34,7 +34,7 @@ Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
 Version:	1.5.3
-Release:	1
+Release:	2
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
