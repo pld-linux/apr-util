@@ -22,6 +22,11 @@
 	%endif
 %endif
 
+# tests fail on x32
+%ifarch x32
+%undefine	with_nss
+%endif
+
 # files list broken, feel free to really fix
 %ifarch alpha
 %undefine	with_mysql
