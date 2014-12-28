@@ -17,9 +17,6 @@
 	%if "%{pld_release}" == "th"
 		%define	dbver	db53
 	%endif
-	%if "%{pld_release}" == "ti"
-		%define	dbver	db45
-	%endif
 	%if "%{pld_release}" == "ac"
 		%define	dbver	db42
 	%endif
@@ -49,9 +46,6 @@ BuildRequires:	apr-devel >= 1:1.3.0
 BuildRequires:	autoconf >= 2.59
 %if "%{pld_release}" == "th"
 BuildRequires:	db-devel >= 4.7
-%endif
-%if "%{pld_release}" == "ti"
-BuildRequires:	db-devel >= 4.5
 %endif
 %if "%{pld_release}" == "ac"
 BuildRequires:	db-devel >= 4.2
