@@ -13,3 +13,17 @@
  AC_MSG_CHECKING(if system crypt() function is threadsafe)
  if test "x$apu_crypt_threadsafe" = "x1"; then
    AC_DEFINE(APU_CRYPT_THREADSAFE, 1, [Define if the system crypt() function is threadsafe])
+--- apr-util-1.5.4/configure.in~	2016-04-08 22:47:59.000000000 +0200
++++ apr-util-1.5.4/configure.in	2016-04-08 22:50:43.902956204 +0200
+@@ -227,6 +227,11 @@ AC_SUBST(APRUTIL_EXPORT_LIBS)
+ AC_SUBST(APRUTIL_PRIV_INCLUDES)
+ APRUTIL_INCLUDES="$APRUTIL_INCLUDES -I/usr/include/apr"
+ AC_SUBST(APRUTIL_INCLUDES)
++
++APR_REMOVEFROM(APRUTIL_LDFLAGS,[-L/usr/lib])
++APR_REMOVEFROM(APRUTIL_LDFLAGS,[-L/usr/lib32])
++APR_REMOVEFROM(APRUTIL_LDFLAGS,[-L/usr/lib64])
++
+ AC_SUBST(APRUTIL_LDFLAGS)
+ AC_SUBST(APRUTIL_LIBS)
+ AC_SUBST(LDFLAGS)
