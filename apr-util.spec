@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_without	freetds	# without FreeTDS (sybdb) DBD module
+%bcond_with	freetds	# without FreeTDS (sybdb) DBD module
 %bcond_without	mysql	# without MySQL DBD module
 %bcond_without	odbc	# without ODBC DBD module
 %bcond_with	oracle	# with Oracle DBD module (BR: proprietary libs)
@@ -35,19 +35,19 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.5.4
-Release:	3
+Version:	1.6.0
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	2202b18f269ad606d70e1864857ed93c
+# Source0-md5:	069a9a980776acab05212c5f37ef8368
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		%{name}-libtool.patch
 Patch3:		%{name}-flags.patch
 URL:		http://apr.apache.org/
-BuildRequires:	apr-devel >= 1:1.3.0
+BuildRequires:	apr-devel >= 1:1.6.0
 BuildRequires:	autoconf >= 2.59
 %if "%{pld_release}" == "th"
 BuildRequires:	db-devel >= 4.7
@@ -69,7 +69,7 @@ BuildRequires:	rpm >= 4.4.9-56
 %{?with_sqlite3:BuildRequires:	sqlite3-devel >= 3}
 %{?with_odbc:BuildRequires:	unixODBC-devel}
 BuildRequires:	which
-Requires:	apr >= 1:1.3.0
+Requires:	apr >= 1:1.6.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -220,7 +220,7 @@ Summary:	Header files and development documentation for apr-util
 Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja programisty do apr-util
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apr-devel >= 1:1.3.0
+Requires:	apr-devel >= 1:1.6.0
 Requires:	expat-devel
 
 %description devel
@@ -247,9 +247,6 @@ Statyczna biblioteka apr-util.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-
-# ensure system expat is used
-%{__rm} -r xml/expat
 
 echo '
 <Layout PLD>
