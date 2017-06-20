@@ -1,6 +1,7 @@
+# NOTE: drop freetds bcond if/when upstream removes the rest of dbd-freetds code
 #
 # Conditional build:
-%bcond_with	freetds	# without FreeTDS (sybdb) DBD module
+%bcond_with	freetds	# without FreeTDS (sybdb) DBD module [unsupported since 1.6.0]
 %bcond_without	mysql	# without MySQL DBD module
 %bcond_without	odbc	# without ODBC DBD module
 %bcond_with	oracle	# with Oracle DBD module (BR: proprietary libs)
@@ -20,16 +21,6 @@
 	%if "%{pld_release}" == "ac"
 		%define	dbver	db42
 	%endif
-%endif
-
-# tests fail on x32
-%ifarch x32
-%undefine	with_nss
-%endif
-
-# files list broken, feel free to really fix
-%ifarch alpha
-%undefine	with_mysql
 %endif
 
 Summary:	A companion library to Apache Portable Runtime
@@ -70,6 +61,7 @@ BuildRequires:	rpm >= 4.4.9-56
 %{?with_odbc:BuildRequires:	unixODBC-devel}
 BuildRequires:	which
 Requires:	apr >= 1:1.6.0
+%{!?with_freetds:Obsoletes:	apr-util-dbd-freetds}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
