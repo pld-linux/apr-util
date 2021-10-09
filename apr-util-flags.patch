@@ -1,10 +1,11 @@
---- apr-util-1.3.9/configure.in~	2010-08-03 10:09:13.537864637 +0200
-+++ apr-util-1.3.9/configure.in	2010-08-03 10:17:48.184690019 +0200
-@@ -216,6 +216,7 @@
+diff -urNp -x '*.orig' apr-util-1.6.1.org/configure.in apr-util-1.6.1/configure.in
+--- apr-util-1.6.1.org/configure.in	2021-10-09 23:46:59.125014825 +0200
++++ apr-util-1.6.1/configure.in	2021-10-09 23:46:59.218348038 +0200
+@@ -277,6 +277,7 @@ APR_ADDTO(APRUTIL_LIBS, [$APR_LIBS])
  
  AC_SUBST(APRUTIL_EXPORT_LIBS)
  AC_SUBST(APRUTIL_PRIV_INCLUDES)
 +APRUTIL_INCLUDES="$APRUTIL_INCLUDES -I/usr/include/apr"
  AC_SUBST(APRUTIL_INCLUDES)
- AC_SUBST(APRUTIL_LDFLAGS)
- AC_SUBST(APRUTIL_LIBS)
+ 
+ APR_REMOVEFROM(APRUTIL_LDFLAGS,[-L/usr/lib])

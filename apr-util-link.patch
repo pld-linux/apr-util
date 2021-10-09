@@ -1,8 +1,9 @@
---- apr-util-0.9.4/configure.in.orig	2004-04-18 23:20:56.000000000 +0200
-+++ apr-util-0.9.4/configure.in	2004-04-18 23:25:35.447213680 +0200
-@@ -98,7 +98,12 @@
- APU_FIND_EXPAT
- APU_FIND_ICONV
+diff -urNp -x '*.orig' apr-util-1.6.1.org/configure.in apr-util-1.6.1/configure.in
+--- apr-util-1.6.1.org/configure.in	2017-04-02 19:57:23.000000000 +0200
++++ apr-util-1.6.1/configure.in	2021-10-09 23:46:58.615015473 +0200
+@@ -172,7 +172,12 @@ APU_FIND_ICONV
+ dnl Enable DSO build; must be last:
+ APU_CHECK_UTIL_DSO
  
 +save_LIBS="$LIBS"
 +LIBS=
@@ -13,11 +14,9 @@
  AC_MSG_CHECKING(if system crypt() function is threadsafe)
  if test "x$apu_crypt_threadsafe" = "x1"; then
    AC_DEFINE(APU_CRYPT_THREADSAFE, 1, [Define if the system crypt() function is threadsafe])
---- apr-util-1.5.4/configure.in~	2016-04-08 22:47:59.000000000 +0200
-+++ apr-util-1.5.4/configure.in	2016-04-08 22:50:43.902956204 +0200
-@@ -227,6 +227,11 @@ AC_SUBST(APRUTIL_EXPORT_LIBS)
+@@ -273,6 +278,11 @@ APR_ADDTO(APRUTIL_LIBS, [$APR_LIBS])
+ AC_SUBST(APRUTIL_EXPORT_LIBS)
  AC_SUBST(APRUTIL_PRIV_INCLUDES)
- APRUTIL_INCLUDES="$APRUTIL_INCLUDES -I/usr/include/apr"
  AC_SUBST(APRUTIL_INCLUDES)
 +
 +APR_REMOVEFROM(APRUTIL_LDFLAGS,[-L/usr/lib])
