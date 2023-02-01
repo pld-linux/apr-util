@@ -1,16 +1,24 @@
 diff -urNp -x '*.orig' apr-util-1.6.1.org/configure.in apr-util-1.6.1/configure.in
 --- apr-util-1.6.1.org/configure.in	2017-04-02 19:57:23.000000000 +0200
 +++ apr-util-1.6.1/configure.in	2021-10-09 23:46:58.615015473 +0200
-@@ -172,7 +172,12 @@ APU_FIND_ICONV
+@@ -175,14 +175,19 @@ APU_FIND_ICONV
  dnl Enable DSO build; must be last:
  APU_CHECK_UTIL_DSO
  
 +save_LIBS="$LIBS"
 +LIBS=
  AC_SEARCH_LIBS(crypt, crypt ufc)
-+APR_ADDTO(APRUTIL_EXPORT_LIBS, [$LIBS])
-+APR_ADDTO(APRUTIL_LIBS, [$LIBS])
+ case "$ac_cv_search_crypt" in
+ "no"|"none required")
+     ;;
+ *)
+-    APR_ADDTO(APRUTIL_LIBS, [$ac_cv_search_crypt])
++    APR_ADDTO(APRUTIL_EXPORT_LIBS, [$LIBS])
++    APR_ADDTO(APRUTIL_LIBS, [$LIBS])
+     ;;
+ esac
 +LIBS="$save_LIBS $LIBS"
++
  AC_MSG_CHECKING(if system crypt() function is threadsafe)
  if test "x$apu_crypt_threadsafe" = "x1"; then
    AC_DEFINE(APU_CRYPT_THREADSAFE, 1, [Define if the system crypt() function is threadsafe])

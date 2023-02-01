@@ -26,16 +26,16 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.6.1
-Release:	5
+Version:	1.6.3
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	8ff5dc36fa39a2a3db1df196d3ed6086
+# Source0-md5:	b6e8c9b31d938fe5797ceb0d1ff2eb69
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
-Patch2:		%{name}-libtool.patch
+
 Patch3:		%{name}-flags.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.6.0
@@ -237,7 +237,7 @@ Statyczna biblioteka apr-util.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+
 %patch3 -p1
 
 echo '
@@ -260,6 +260,7 @@ echo '
 ' > config.layout
 
 %build
+PYTHON=%{__python3} \
 ./buildconf \
 	--with-apr=%{_datadir}/apr
 
