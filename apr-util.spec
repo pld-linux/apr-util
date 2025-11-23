@@ -37,6 +37,7 @@ Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
 Patch2:		gcc14.patch
 Patch3:		%{name}-flags.patch
+Patch4:		mysql-detect.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.6.0
 BuildRequires:	autoconf >= 2.59
@@ -239,6 +240,7 @@ Statyczna biblioteka apr-util.
 %patch -P1 -p1
 %patch -P2 -p0
 %patch -P3 -p1
+%patch -P4 -p1
 
 echo '
 <Layout PLD>

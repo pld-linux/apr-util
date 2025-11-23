@@ -1,0 +1,28 @@
+--- apr-util-1.6.3/build/dbd.m4.orig	2023-01-27 14:32:52.000000000 +0100
++++ apr-util-1.6.3/build/dbd.m4	2025-11-23 18:22:35.843597774 +0100
+@@ -186,10 +186,10 @@
+       fi
+ 
+       AC_CHECK_HEADERS([mysql.h errmsg.h], [apu_have_mysql=1], [apu_have_mysql=0; break])
+-      if test "$apr_have_mysql" = "0"; then
++      if test "$apu_have_mysql" = "0"; then
+         AC_CHECK_HEADERS([mysql/mysql.h mysql/errmsg.h], [apu_have_mysql=1], [apu_have_mysql=0; break])
+       fi
+-      if test "$apr_have_mysql" = "1"; then
++      if test "$apu_have_mysql" = "1"; then
+         AC_CHECK_HEADERS([my_global.h my_sys.h mysql/my_global.h mysql/my_sys.h])
+         AC_CHECK_LIB($my_library, mysql_init,, [apu_have_mysql=0])
+       fi
+@@ -221,10 +221,10 @@
+ 
+       AC_MSG_NOTICE(checking for mysql in $withval)
+       AC_CHECK_HEADERS([mysql.h errmsg.h], [apu_have_mysql=1], [apu_have_mysql=0; break])
+-      if test "$apr_have_mysql" = "0"; then
++      if test "$apu_have_mysql" = "0"; then
+         AC_CHECK_HEADERS([mysql/mysql.h mysql/errmsg.h], [apu_have_mysql=1], [apu_have_mysql=0; break])
+       fi
+-      if test "$apr_have_mysql" = "1"; then
++      if test "$apu_have_mysql" = "1"; then
+         AC_CHECK_HEADERS([my_global.h my_sys.h mysql/my_global.h mysql/my_sys.h])
+         AC_CHECK_LIB($my_library, mysql_init,, [apu_have_mysql=0])
+       fi
