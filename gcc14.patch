@@ -1,0 +1,27 @@
+------------------------------------------------------------------------
+r1907246 | jorton | 2023-02-03 17:36:17 +0100 | 8 lines
+
+Merge r1906347 from trunk:
+
+Fix configure for compilers which don't accept implicit
+int (no longer part of C since C99).
+
+Submitted by: Florian Weimer <fweimer redhat.com>
+PR: 66396
+
+
+Index: build/dbm.m4
+===================================================================
+--- build/dbm.m4	(revision 1907245)
++++ build/dbm.m4	(revision 1907246)
+@@ -235,7 +235,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <$apu_try_berkeley_db_header>
+-main ()
++int main (void)
+ {
+   int major, minor, patch;
+ 
+
+------------------------------------------------------------------------

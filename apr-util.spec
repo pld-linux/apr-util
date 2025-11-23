@@ -35,7 +35,7 @@ Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 # Source0-md5:	b6e8c9b31d938fe5797ceb0d1ff2eb69
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
-
+Patch2:		gcc14.patch
 Patch3:		%{name}-flags.patch
 URL:		http://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.6.0
@@ -237,7 +237,7 @@ Statyczna biblioteka apr-util.
 %setup -q
 %patch -P0 -p1
 %patch -P1 -p1
-
+%patch -P2 -p0
 %patch -P3 -p1
 
 echo '
