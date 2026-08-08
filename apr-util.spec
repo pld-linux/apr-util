@@ -16,9 +16,6 @@
 	%if "%{pld_release}" == "th"
 		%define	dbver	db53
 	%endif
-	%if "%{pld_release}" == "ac"
-		%define	dbver	db42
-	%endif
 %endif
 
 Summary:	A companion library to Apache Portable Runtime
@@ -42,10 +39,6 @@ BuildRequires:	apr-devel >= 1:1.6.0
 BuildRequires:	autoconf >= 2.59
 %if "%{pld_release}" == "th"
 BuildRequires:	db-devel >= 4.7
-%endif
-%if "%{pld_release}" == "ac"
-BuildRequires:	db-devel >= 4.2
-BuildConflicts:	db4.5-devel
 %endif
 BuildRequires:	expat-devel
 BuildRequires:	libtool
