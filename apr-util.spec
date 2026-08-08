@@ -1,7 +1,5 @@
-# NOTE: drop freetds bcond if/when upstream removes the rest of dbd-freetds code
 #
 # Conditional build:
-%bcond_with	freetds	# without FreeTDS (sybdb) DBD module [unsupported since 1.6.0]
 %bcond_without	mysql	# without MySQL DBD module
 %bcond_without	odbc	# without ODBC DBD module
 %bcond_with	oracle	# with Oracle DBD module (BR: proprietary libs)
@@ -26,20 +24,20 @@
 Summary:	A companion library to Apache Portable Runtime
 Summary(pl.UTF-8):	Biblioteka towarzysząca Apache Portable Runtime
 Name:		apr-util
-Version:	1.6.3
-Release:	3
+Version:	1.6.4
+Release:	1
 Epoch:		1
 License:	Apache v2.0
 Group:		Libraries
-Source0:	http://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
-# Source0-md5:	b6e8c9b31d938fe5797ceb0d1ff2eb69
+Source0:	https://downloads.apache.org/apr/%{name}-%{version}.tar.bz2
+# Source0-md5:	8c933056e21005f69225ec6ffd0a16d3
 Patch0:		%{name}-link.patch
 Patch1:		%{name}-config-noldap.patch
-Patch2:		gcc14.patch
+Patch2:		%{name}-mysql.patch
 Patch3:		%{name}-flags.patch
 Patch4:		mysql-detect.patch
 Patch5:		nss.patch
-URL:		http://apr.apache.org/
+URL:		https://apr.apache.org/
 BuildRequires:	apr-devel >= 1:1.6.0
 BuildRequires:	autoconf >= 2.59
 %if "%{pld_release}" == "th"
@@ -50,7 +48,6 @@ BuildRequires:	db-devel >= 4.2
 BuildConflicts:	db4.5-devel
 %endif
 BuildRequires:	expat-devel
-%{?with_freetds:BuildRequires:	freetds-devel}
 BuildRequires:	libtool
 %{?with_mysql:BuildRequires:	mysql-devel}
 %{?with_nss:BuildRequires:	nss-devel}
@@ -63,7 +60,7 @@ BuildRequires:	rpm >= 4.4.9-56
 %{?with_odbc:BuildRequires:	unixODBC-devel}
 BuildRequires:	which
 Requires:	apr >= 1:1.6.0
-%{!?with_freetds:Obsoletes:	apr-util-dbd-freetds}
+Obsoletes:	apr-util-dbd-freetds < 1:1.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_includedir	/usr/include/apr-util
@@ -98,18 +95,6 @@ APR cryptographic module using OpenSSL library.
 
 %description crypto-openssl -l pl.UTF-8
 Moduł kryptograficzny APR wykorzystujący bibliotekę OpenSSL.
-
-%package dbd-freetds
-Summary:	DBD driver for FreeTDS (Sybase/MS SQL)
-Summary(pl.UTF-8):	Sterownik DBD dla FreeTDS (Sybase/MS SQL)
-Group:		Libraries
-Requires:	%{name} = %{epoch}:%{version}-%{release}
-
-%description dbd-freetds
-DBD driver for FreeTDS (Sybase/MS SQL).
-
-%description dbd-freetds -l pl.UTF-8
-Sterownik DBD dla FreeTDS (Sybase/MS SQL).
 
 %package dbd-mysql
 Summary:	DBD driver for MySQL
@@ -239,7 +224,7 @@ Statyczna biblioteka apr-util.
 %setup -q
 %patch -P0 -p1
 %patch -P1 -p1
-%patch -P2 -p0
+%patch -P2 -p1
 %patch -P3 -p1
 %patch -P4 -p1
 %patch -P5 -p0
@@ -282,7 +267,6 @@ PYTHON=%{__python3} \
 %endif
 	%{?with_nss:--with-nss} \
 	%{?with_openssl:--with-openssl} \
-	%{!?with_freetds:--without-freetds} \
 	%{?with_mysql:--with-mysql=%{_prefix}} \
 	%{!?with_odbc:--without-odbc} \
 	%{?with_oracle:--with-oracle} \
@@ -312,89 +296,82 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGES NOTICE README
-%attr(755,root,root) %{_libdir}/libaprutil-1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libaprutil-1.so.0
+%{_libdir}/libaprutil-1.so.*.*.*
+%ghost %{_libdir}/libaprutil-1.so.0
 %dir %{_libdir}/apr-util-1
 
 %if %{with nss}
 %files crypto-nss
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_nss-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_nss.so
+%{_libdir}/apr-util-1/apr_crypto_nss-1.so
+%{_libdir}/apr-util-1/apr_crypto_nss.so
 %endif
 
 %if %{with openssl}
 %files crypto-openssl
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_openssl-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_crypto_openssl.so
-%endif
-
-%if %{with freetds}
-%files dbd-freetds
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_freetds-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_freetds.so
+%{_libdir}/apr-util-1/apr_crypto_openssl-1.so
+%{_libdir}/apr-util-1/apr_crypto_openssl.so
 %endif
 
 %if %{with mysql}
 %files dbd-mysql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_mysql.so
+%{_libdir}/apr-util-1/apr_dbd_mysql-1.so
+%{_libdir}/apr-util-1/apr_dbd_mysql.so
 %endif
 
 %if %{with odbc}
 %files dbd-odbc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_odbc-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_odbc.so
+%{_libdir}/apr-util-1/apr_dbd_odbc-1.so
+%{_libdir}/apr-util-1/apr_dbd_odbc.so
 %endif
 
 %if %{with oracle}
 %files dbd-oracle
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_oracle-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_oracle.so
+%{_libdir}/apr-util-1/apr_dbd_oracle-1.so
+%{_libdir}/apr-util-1/apr_dbd_oracle.so
 %endif
 
 %if %{with pgsql}
 %files dbd-pgsql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_pgsql-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_pgsql.so
+%{_libdir}/apr-util-1/apr_dbd_pgsql-1.so
+%{_libdir}/apr-util-1/apr_dbd_pgsql.so
 %endif
 
 %if %{with sqlite2}
 %files dbd-sqlite2
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite2-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite2.so
+%{_libdir}/apr-util-1/apr_dbd_sqlite2-1.so
+%{_libdir}/apr-util-1/apr_dbd_sqlite2.so
 %endif
 
 %if %{with sqlite3}
 %files dbd-sqlite3
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite3-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbd_sqlite3.so
+%{_libdir}/apr-util-1/apr_dbd_sqlite3-1.so
+%{_libdir}/apr-util-1/apr_dbd_sqlite3.so
 %endif
 
 %files dbm-db
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_dbm_db.so
+%{_libdir}/apr-util-1/apr_dbm_db-1.so
+%{_libdir}/apr-util-1/apr_dbm_db.so
 
 %if %{with ldap}
 %files ldap
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_ldap-1.so
-%attr(755,root,root) %{_libdir}/apr-util-1/apr_ldap.so
+%{_libdir}/apr-util-1/apr_ldap-1.so
+%{_libdir}/apr-util-1/apr_ldap.so
 %endif
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/apu-1-config
-%attr(755,root,root) %{_libdir}/libaprutil-1.so
+%{_libdir}/libaprutil-1.so
 %{_libdir}/libaprutil-1.la
 %{_libdir}/aprutil.exp
 %{_includedir}

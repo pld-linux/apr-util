@@ -1,0 +1,22 @@
+--- apr-util-1.6.4/dbd/apr_dbd_mysql.c.orig	2023-01-27 14:32:52.000000000 +0100
++++ apr-util-1.6.4/dbd/apr_dbd_mysql.c	2026-08-08 20:01:34.831491924 +0200
+@@ -53,6 +53,10 @@
+ /* default maximum field size 1 MB */
+ #define FIELDSIZE 1048575
+ 
++#if MYSQL_VERSION_ID >= 80000
++#define my_bool bool
++#endif
++
+ struct apr_dbd_prepared_t {
+     MYSQL_STMT* stmt;
+     int nargs;
+@@ -1262,7 +1266,7 @@ static apr_status_t thread_end(void *dat
+ 
+ static void dbd_mysql_init(apr_pool_t *pool)
+ {
+-#if MYSQL_VERSION_ID < 100000
++#if MYSQL_VERSION_ID < 80000
+     my_init();
+ #endif
+     mysql_thread_init();
